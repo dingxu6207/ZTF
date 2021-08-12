@@ -25,3 +25,5 @@ $RECYCLE.BIN/
 *.csv
 *.txt
 *.txt
+*.lc
+*.hdf5

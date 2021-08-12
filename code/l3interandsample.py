@@ -11,8 +11,8 @@ from scipy import interpolate
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import preprocessing    
-#model = load_model('model10l3.hdf5')
-model = load_model('model10.hdf5')
+model = load_model('model10l3.hdf5')
+#model = load_model('model100.hdf5')
 #model = load_model('alldown.hdf5')
 #model = load_model('all.hdf5')
 #model = load_model('q.hdf5')
@@ -57,5 +57,3 @@ nparraydata = np.reshape(sy1,(1,100))
 prenpdata = model.predict(nparraydata)
 
 print(prenpdata)
-
-

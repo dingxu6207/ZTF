@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import pandas as pd
 
-lightdata = np.loadtxt('savedatasample3.txt') 
+lightdata = np.loadtxt('savedatasample0.txt') 
 #lightdata = np.loadtxt('alldatasample35.txt') 
 
 
@@ -63,7 +63,7 @@ plt.figure(2)
 rdata = lightdata[:,102]
 sns.kdeplot(rdata,shade=True)
 #plt.title('r')
-plt.xlabel('r',fontsize=14)
+plt.xlabel('f',fontsize=14)
 plt.ylabel('frequency',fontsize=14)
 
 plt.figure(3)
