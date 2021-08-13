@@ -85,7 +85,7 @@ def l3model10R2(data, phrase):
 
 
 path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-file = 'KIC 10965091.txt'
+file = 'KIC 11336707.txt'
 data = np.loadtxt(path+file)
 phrase = data[:,0]
 datay = data[:,1]-np.mean(data[:,1])
@@ -106,13 +106,13 @@ if inclcom>50:
     l3predict10 = l3model10.predict(nparraydata)
             
     r1,mag1 = model1R2(predict1, phrase)
-    print('*************************************1')
+    print('*******************1******************')
     r2,mag2 = model10R2(predict10, phrase)
-    print('*************************************2')
+    print('*******************2******************')
     r3,mag3 = model1R2(l3predict1, phrase)
-    print('*************************************3')
+    print('*******************3******************')
     r4,mag4 = model10R2(l3predict10, phrase)
-    print('*************************************4')
+    print('*******************4******************')
             
     R = [r1,r2,r3,r4]
     index = np.argmax(R)
@@ -123,29 +123,37 @@ if inclcom>50:
     if index==0:
         resultflux = mag1
         predata1 = predict1[0].tolist()
+        print('nol31=', predata1)
     
     if index==1:
         resultflux = mag2
         predata10 = predict10[0].tolist()
+        print('nol310=', predata10)
         
     if index==2:
         resultflux = mag3
         l3predata1 = l3predict1[0].tolist()
+        print('l31=', l3predata1)
 
     if index==3:
         resultflux = mag4
         l3predata10 = l3predict10[0].tolist()
-    
+        print('l310=', l3predata10)
+        
+    print('R2=', R[index])
     try:
 
         plt.figure(1)
         plt.plot(phrase,flux,'.')
-        plt.plot(sx1,sy1,'.')
-        plt.plot(phrase, resultflux,'.')
+        #plt.plot(sx1,sy1,'.')
+        #plt.plot(phrase, resultflux,'.')
+        plt.scatter(phrase, resultflux, c='none',marker='o',edgecolors='r', s=40)
         ax = plt.gca()
         ax.yaxis.set_ticks_position('left') #将y轴的位置设置在右边
         ax.invert_yaxis() #y轴反向          
 
     except:
-        print('error')    
+        print('error')
+else:
+    print('incl=', inclcom)
         
