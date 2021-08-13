@@ -11,7 +11,7 @@ from scipy import interpolate
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import preprocessing    
-model = load_model('model10l3.hdf5')
+model = load_model('model10l31.hdf5')
 #model = load_model('model100.hdf5')
 #model = load_model('alldown.hdf5')
 #model = load_model('all.hdf5')
@@ -22,7 +22,7 @@ model = load_model('model10l3.hdf5')
 model.summary()
 
 path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-file = 'KIC 11769739.txt'
+file = 'KIC 9274472.txt'
 
 
 #file = 'V737inter.txt'

@@ -20,15 +20,15 @@ b.add_dataset('lc', compute_times=phoebe.linspace(0,1,100),passband= 'LSST:r')
 
 b['period@binary'] = 1
 
-b['incl@binary'] =  65.58713  #58.528934
-b['q@binary'] =    5.697572*0.1
+b['incl@binary'] =  75.75667   #58.528934
+b['q@binary'] =    8.8338175*0.01
 b['teff@primary'] =  6500  #6208 
-b['teff@secondary'] = 6500*95.19823*0.01#6500*100.08882*0.01 #6087
+b['teff@secondary'] = 6500*93.50868*0.01#6500*100.08882*0.01 #6087
 
 b['sma@binary'] = 1#0.05 2.32
 b.flip_constraint('pot', solve_for='requiv@primary')
 b.flip_constraint('fillout_factor', solve_for='pot')
-b['fillout_factor'] = 29.894625*0.01
+b['fillout_factor'] = 62.612854*0.01
 #b['fillout_factor@contact_envelope'] = 0.5
 
 #b['fillout_factor@contact_envelope@envelope@component'] = 0.5
@@ -80,7 +80,7 @@ np.savetxt('data0.lc',
 #print(fluxcha)
 
 path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-file = 'KIC 4937217.txt'
+file = 'KIC 12352712.txt'
 #file = 'V396Mon_Yang2001B.nrm'
 #path = 'E:\\shunbianyuan\\phometry\\pipelinecode\\pipeline\\LiXZ\\nihe\\'
 #yuandata = np.loadtxt(file)
