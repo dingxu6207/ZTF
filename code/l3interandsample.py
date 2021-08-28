@@ -22,7 +22,7 @@ model = load_model('model10l31.hdf5')
 model.summary()
 
 path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-file = 'KIC 9274472.txt'
+file = 'KIC 10880490.txt'
 
 
 #file = 'V737inter.txt'
@@ -41,7 +41,7 @@ plt.ylabel('mag',fontsize=14)
 
 
 sx1 = np.linspace(0,1,100)
-func1 = interpolate.UnivariateSpline(data[:,0], datay,s=0)#强制通过所有点
+func1 = interpolate.UnivariateSpline(data[:,0], datay,s=0.)#强制通过所有点
 sy1 = func1(sx1)
 plt.figure(0)
 plt.plot(sx1, sy1, '.', c='r')

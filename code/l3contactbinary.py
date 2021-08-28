@@ -20,15 +20,15 @@ times  = np.linspace(0,1,lengthd)
 b.add_dataset('lc', times=times, passband= 'LSST:r')
 b.set_value('l3_mode', 'fraction')
 
-constfrac = 23.1763*0.01
+constfrac = 68.2476*0.01
 #b.set_value('l3_frac', constfrac)
 b['l3_frac']= constfrac
 b['period@binary'] = 1
 
-b['incl@binary'] = 54.9318    #58.528934
-b['q@binary'] =     23.942749*10*0.01
-b['teff@primary'] =  5500#6500#6500#6500  #6208 
-b['teff@secondary'] = 5500*86.408676*0.01#6500*0.9069584       
+b['incl@binary'] = 78.58976    #58.528934
+b['q@binary'] =     73.596054*10*0.01
+b['teff@primary'] =  6500#6500#6500#6500  #6208 
+b['teff@secondary'] = 6500*87.57565*0.01#6500*0.9069584       
 
 #b['fillout_factor@contact_envelope@envelope@component'] = 0.5
 
@@ -38,7 +38,7 @@ b['sma@binary'] = 1#0.05 2.32
 #b['requiv@primary'] = 0.33427894 #0.61845703
 b.flip_constraint('pot', solve_for='requiv@primary')
 b.flip_constraint('fillout_factor', solve_for='pot')
-b['fillout_factor'] = 31.640217*0.01
+b['fillout_factor'] = 14.400814*0.01
 
 b.add_dataset('mesh', times=[0.25], dataset='mesh01')
 
@@ -62,7 +62,7 @@ fluxcha = fluxes_model-b['value@times@lc01@model']
 
 path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
 #file = 'ztf1.txt' #6677225
-file = 'KIC 9274472.txt'
+file = 'KIC 10880490.txt'
 #yuandata = np.loadtxt(file)
 yuandata = np.loadtxt(path+file)
 #datay = 10**(yuandata[:,1]/(-2.512))

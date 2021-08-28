@@ -21,10 +21,10 @@ import pandas as pd
 import fitfunction
 
 inclmodel = load_model('incl.hdf5')
-model1 = load_model('model1.hdf5')
-model10 = load_model('model10.hdf5')
-l3model1 = load_model('model1l3.hdf5')
-l3model10 = load_model('model10l3.hdf5')
+model1 = load_model('model1_1.hdf5')
+model10 = load_model('model10_1.hdf5')
+l3model1 = load_model('model1l3_1.hdf5')
+l3model10 = load_model('model10l3_1.hdf5')
 
 def calculater(ydata, caldata):
     res_ydata  = np.array(ydata) - np.array(caldata)
@@ -75,7 +75,8 @@ def l3model10R2(data, phrase):
     predata[1] = predata[1]/10
     predata[2] = predata[2]/100
     predata[3] = predata[3]/100
-    predata[3] = predata[3]/100
+    predata[4] = predata[4]/100
+    #print(predata)
     try:
         times,resultflux= fitfunction.plotphoebel3(predata,phrase)
         r_squared = calculater(resultflux,flux)
@@ -85,8 +86,10 @@ def l3model10R2(data, phrase):
 
 
 path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-file = 'KIC 11336707.txt'
+file = 'KIC 6050116.txt'
 data = np.loadtxt(path+file)
+#fileone = 'mag(0-1).txt'
+#data = np.loadtxt(fileone)
 phrase = data[:,0]
 datay = data[:,1]-np.mean(data[:,1])
 flux = datay
@@ -99,7 +102,7 @@ nparraydata = np.reshape(sy1,(1,100))
 incldata = inclmodel.predict(nparraydata)
 inclcom = incldata[0][0]
 
-if inclcom>50:
+if inclcom>40:
     predict1 = model1.predict(nparraydata)
     predict10 = model10.predict(nparraydata)
     l3predict1 = l3model1.predict(nparraydata)
@@ -109,14 +112,14 @@ if inclcom>50:
     print('*******************1******************')
     r2,mag2 = model10R2(predict10, phrase)
     print('*******************2******************')
-    r3,mag3 = model1R2(l3predict1, phrase)
+    r3,mag3 = l3model1R2(l3predict1, phrase)
     print('*******************3******************')
-    r4,mag4 = model10R2(l3predict10, phrase)
+    r4,mag4 = l3model10R2(l3predict10, phrase)
     print('*******************4******************')
             
     R = [r1,r2,r3,r4]
     index = np.argmax(R)
-            
+       
     if R[index]<0.6:
         print('it is bad!')
     
