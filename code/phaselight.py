@@ -13,8 +13,8 @@ from scipy import interpolate
 import os,pickle,time
 from scipy import interpolate
 
-P = 0.5820740
-CSV_FILE_PATH = '152.csv'
+P = 0.2673118
+CSV_FILE_PATH = '3160.csv'
 
 dfdata = pd.read_csv(CSV_FILE_PATH)
 hjd = dfdata['HJD']
@@ -49,7 +49,8 @@ try:
     s = np.diff(nplistmag,2).std()/np.sqrt(6)
     num = len(nplistmag)
     lvalue = np.max(nplistphase)
-    sx1 = np.linspace(0,1,1000)
+    sx1 = np.linspace(0,1,500)
+    nplistphase = np.sort(nplistphase)
     func1 = interpolate.UnivariateSpline(nplistphase, nplistmag,s=s*s*num)#强制通过所有点
     sy1 = func1(sx1)
     indexmag = np.argmax(sy1)
@@ -72,3 +73,6 @@ phasemag = phasemag[phasemag[:,0]<=1]
 
 plt.figure(1)
 plt.plot(phasemag[:,0], phasemag[:,1],'.')
+np.savetxt(CSV_FILE_PATH[:-4]+'.txt', phasemag)
+
+
