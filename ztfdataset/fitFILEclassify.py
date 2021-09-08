@@ -25,7 +25,7 @@ def ztf_2(CSV_FILE_PATH,P):
     try:
         lenr = rg['r']
     except:
-        return [0],[0]
+        return np.array([[1.0,2.0],[3.0,4.0]])
 
     nphjd = np.array(hjd)
     npmag = np.array(mag)
@@ -67,7 +67,7 @@ def ztf_2(CSV_FILE_PATH,P):
             indexmag = listmag.index(maxindex)
             nplistphase = nplistphase-nplistphase[indexmag]
         except:
-            return [0],[0]
+            return np.array([[1.0,2.0],[3.0,4.0]])
 #################以上求最大值对应的位置#########################
     phasemag = np.vstack((nplistphase, nplistmag)) #纵向合并矩阵
     phasemag = phasemag.T
