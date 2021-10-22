@@ -105,20 +105,20 @@ for j in range(t1w+1):
                 
             if (dat[ID,24].upper()=='EA'):
                 pm = ztf_2(filename, P)             
-                if len(pm[:,0]) > 100:
+                if len(pm[:,0]) > 80:
                     s1 = np.diff(pm[:,1],2).std()/np.sqrt(6)
                     s2 = np.std(pm[:,1])
-                    sx1 = np.linspace(0,1,500)
+                    sx1 = np.linspace(0,1,200)
                     sy1 = np.interp(sx1, pm[:,0], pm[:,1])
                     sx1sy1 = np.vstack((sx1, sy1)) #纵向合并矩阵
                     sx1sy1 = sx1sy1.T
                     if s2/s1>2:
                         np.savetxt('I:\\ZTFDATA\\YUANDATA\\EA\\'+sourceid+'.txt', sx1sy1)
                
-            if (dat[ID,24].upper()=='EW' and ID<5000000):
+            if (dat[ID,24].upper()=='EW' and ID<300000):
                 pm = ztf_2(filename, P)                             
-                if len(pm[:,0]) > 100:
-                    sx1 = np.linspace(0,1,500)
+                if len(pm[:,0]) > 80:
+                    sx1 = np.linspace(0,1,200)
                     sy1 = np.interp(sx1, pm[:,0], pm[:,1])
                     s1 = np.diff(pm[:,1],2).std()/np.sqrt(6)
                     s2 = np.std(pm[:,1])
@@ -130,10 +130,10 @@ for j in range(t1w+1):
                                              
             if (dat[ID,24].upper()=='BYDRA'):
                 pm = ztf_2(filename, P)             
-                if len(pm[:,0]) > 100:
+                if len(pm[:,0]) > 80:
                     s1 = np.diff(pm[:,1],2).std()/np.sqrt(6)
                     s2 = np.std(pm[:,1])
-                    sx1 = np.linspace(0,1,500)
+                    sx1 = np.linspace(0,1,200)
                     sy1 = np.interp(sx1, pm[:,0], pm[:,1])
                     sx1sy1 = np.vstack((sx1, sy1)) #纵向合并矩阵
                     sx1sy1 = sx1sy1.T
@@ -151,10 +151,10 @@ for j in range(t1w+1):
            
             if (dat[ID,24].upper()=='RR'):
                 pm = ztf_2(filename, P)             
-                if len(pm[:,0]) > 100:
+                if len(pm[:,0]) > 80:
                     s1 = np.diff(pm[:,1],2).std()/np.sqrt(6)
                     s2 = np.std(pm[:,1])
-                    sx1 = np.linspace(0,1,500)
+                    sx1 = np.linspace(0,1,200)
                     sy1 = np.interp(sx1, pm[:,0], pm[:,1])
                     sx1sy1 = np.vstack((sx1, sy1)) #纵向合并矩阵
                     sx1sy1 = sx1sy1.T
@@ -163,10 +163,10 @@ for j in range(t1w+1):
 
             if (dat[ID,24].upper()=='RRC'):
                 pm = ztf_2(filename, P)  
-                if len(pm[:,0]) > 100:
+                if len(pm[:,0]) > 80:
                     s1 = np.diff(pm[:,1],2).std()/np.sqrt(6)
                     s2 = np.std(pm[:,1])
-                    sx1 = np.linspace(0,1,500)
+                    sx1 = np.linspace(0,1,200)
                     sy1 = np.interp(sx1, pm[:,0], pm[:,1])
                     sx1sy1 = np.vstack((sx1, sy1)) #纵向合并矩阵
                     sx1sy1 = sx1sy1.T
@@ -176,10 +176,10 @@ for j in range(t1w+1):
                 
             if (dat[ID,24].upper()=='RSCVN'):
                 pm = ztf_2(filename, P)             
-                if len(pm[:,0]) > 100:
+                if len(pm[:,0]) > 80:
                     s1 = np.diff(pm[:,1],2).std()/np.sqrt(6)
                     s2 = np.std(pm[:,1])
-                    sx1 = np.linspace(0,1,500)
+                    sx1 = np.linspace(0,1,200)
                     sy1 = np.interp(sx1, pm[:,0], pm[:,1])
                     sx1sy1 = np.vstack((sx1, sy1)) #纵向合并矩阵
                     sx1sy1 = sx1sy1.T
@@ -189,10 +189,10 @@ for j in range(t1w+1):
                     
             if (dat[ID,24].upper()=='CEP' or dat[ID,24].upper()=='CEPII'):
                 pm = ztf_2(filename, P)                         
-                if len(pm[:,0]) > 100:
+                if len(pm[:,0]) > 80:
                     s1 = np.diff(pm[:,1],2).std()/np.sqrt(6)
                     s2 = np.std(pm[:,1])
-                    sx1 = np.linspace(0,1,500)
+                    sx1 = np.linspace(0,1,200)
                     sy1 = np.interp(sx1, pm[:,0], pm[:,1])
                     sx1sy1 = np.vstack((sx1, sy1)) #纵向合并矩阵
                     sx1sy1 = sx1sy1.T
@@ -201,10 +201,10 @@ for j in range(t1w+1):
         
             if (dat[ID,24].upper()=='DSCT'):
                 pm = ztf_2(filename, P)                         
-                if len(pm[:,0]) > 100:
+                if len(pm[:,0]) > 80:
                     s1 = np.diff(pm[:,1],2).std()/np.sqrt(6)
                     s2 = np.std(pm[:,1])
-                    sx1 = np.linspace(0,1,500)
+                    sx1 = np.linspace(0,1,200)
                     sy1 = np.interp(sx1, pm[:,0], pm[:,1])
                     sx1sy1 = np.vstack((sx1, sy1)) #纵向合并矩阵
                     sx1sy1 = sx1sy1.T

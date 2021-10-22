@@ -87,9 +87,9 @@ def l3model10R2(data, phrase):
 
 
 #path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-#file = 'KIC 6050116.txt'
+#file = 'KIC 4937217.txt'
 #data = np.loadtxt(path+file)
-fileone = '3160.txt'
+fileone = 'cxh.txt'
 data = np.loadtxt(fileone)
 phrase = data[:,0]
 datay = data[:,1]-np.mean(data[:,1])
