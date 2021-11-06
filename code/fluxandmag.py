@@ -11,8 +11,9 @@ from PyAstronomy.pyasl import foldAt
 from scipy import interpolate
 
 data = np.loadtxt('lta1')
-jd = data[:,0][0:500]
-flux = data[:,1][0:500]
+lendata = len(data)
+jd = data[:,0][0:15000]
+flux = data[:,1][0:15000]
 P = 0.733738
 
 
@@ -23,6 +24,7 @@ resulflux = flux[sortIndi]
 resultmag = -2.5*np.log10(resulflux)
 resultmag = resultmag - np.mean(resultmag)
  
+
 listmag = resultmag.tolist()
 listmag.extend(listmag)
 listphrase = phases.tolist()
@@ -33,7 +35,7 @@ nplistphase = np.array(listphrase)
 s = np.diff(nplistmag,2).std()/np.sqrt(6)
 num = len(nplistmag)
 #lvalue = np.max(nplistphase)
-sx1 = np.linspace(0,1,1000)
+sx1 = np.linspace(0,1,2000)
 nplistphase = np.sort(nplistphase)
 func1 = interpolate.UnivariateSpline(nplistphase, nplistmag,s=s*s*num)#强制通过所有点
 sy1 = func1(sx1)
