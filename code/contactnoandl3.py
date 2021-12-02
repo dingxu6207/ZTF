@@ -86,11 +86,11 @@ def l3model10R2(data, phrase):
         return 0,0,phrase
 
 
-path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-file = 'KIC 7348206.txt'
-data = np.loadtxt(path+file)
-#fileone = 'cxh.txt'
-#data = np.loadtxt(fileone)
+#path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
+#file = 'KIC 7348206.txt'
+#data = np.loadtxt(path+file)
+fileone = 'phasemag.txt'
+data = np.loadtxt(fileone)
 phrase = data[:,0]
 datay = data[:,1]-np.mean(data[:,1])
 flux = datay
