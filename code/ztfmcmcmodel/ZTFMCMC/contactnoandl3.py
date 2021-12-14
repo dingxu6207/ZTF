@@ -23,8 +23,8 @@ import fitfunction
 inclmodel = load_model('incl.hdf5')
 model1 = load_model('model1.hdf5')
 model10 = load_model('model10.hdf5')
-l3model1 = load_model('model1l3_1.hdf5')
-l3model10 = load_model('model10l3_1.hdf5')
+l3model1 = load_model('model1l3.hdf5')
+l3model10 = load_model('model10l3.hdf5')
 
 def calculater(ydata, caldata):
     res_ydata  = np.array(ydata) - np.array(caldata)
@@ -34,44 +34,45 @@ def calculater(ydata, caldata):
     r_squared  = 1 - (ss_res / ss_tot)
     return stdres,r_squared
 
-def model1R2(data, phrase):
+def model1R2(data, phrase, T1):
     predata = data[0].tolist()
     predata[1] = predata[1]/100
     predata[2] = predata[2]/100
     predata[3] = predata[3]/100
+    print(predata)
     try:
-        times,resultflux= fitfunction.plotphoebenol3(predata,phrase)
+        times,resultflux, pbdic, pr1, sr2 = fitfunction.plotphoebenol3T(predata,phrase,T1)
         stdr,r_squared = calculater(resultflux,flux)
         return stdr,r_squared,resultflux
     except:
         return 0,0,phrase
     
-def model10R2(data, phrase):
+def model10R2(data, phrase, T1):
     predata = data[0].tolist()
     predata[1] = predata[1]/10
     predata[2] = predata[2]/100
     predata[3] = predata[3]/100
     try:
-        times,resultflux= fitfunction.plotphoebenol3(predata,phrase)
+        times,resultflux, pbdic, pr1, sr2 = fitfunction.plotphoebenol3T(predata,phrase, T1)
         stdr,r_squared = calculater(resultflux,flux)
         return stdr,r_squared,resultflux
     except:
         return 0,0,phrase 
     
-def l3model1R2(data, phrase):
+def l3model1R2(data, phrase, T1):
     predata = data[0].tolist()
     predata[1] = predata[1]/100
     predata[2] = predata[2]/100
     predata[3] = predata[3]/100
     predata[4] = predata[4]/100
     try:
-        times,resultflux= fitfunction.plotphoebel3(predata,phrase)
+        times,resultflux, pbdic, pr1, sr2 = fitfunction.plotphoebel3T(predata,phrase, T1)
         stdr,r_squared = calculater(resultflux,flux)
         return stdr,r_squared,resultflux
     except:
         return 0,0,phrase
  
-def l3model10R2(data, phrase):
+def l3model10R2(data, phrase, T1):
     predata = data[0].tolist()
     predata[1] = predata[1]/10
     predata[2] = predata[2]/100
@@ -79,7 +80,7 @@ def l3model10R2(data, phrase):
     predata[4] = predata[4]/100
     #print(predata)
     try:
-        times,resultflux= fitfunction.plotphoebel3(predata,phrase)
+        times, resultflux, pbdic, pr1, sr2 = fitfunction.plotphoebel3T(predata,phrase,T1)
         stdr,r_squared = calculater(resultflux,flux)
         return stdr,r_squared,resultflux
     except:
@@ -87,7 +88,7 @@ def l3model10R2(data, phrase):
 
 
 path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-file = 'KIC 9087918.txt'
+file = 'KIC 8029708.txt'
 data = np.loadtxt(path+file)
 #fileone = 'phasemag.txt'
 #data = np.loadtxt(fileone)
@@ -104,19 +105,25 @@ nparraydata = np.reshape(sy1,(1,100))
 incldata = inclmodel.predict(nparraydata)
 inclcom = incldata[0][0]
 
+temperature = 5226/5850
+listsys = sy1.tolist()
+listsys.append(temperature)
+npsy1 = np.array(listsys)
+nparraydata = np.reshape(npsy1,(1,101))
+
 if inclcom>40:
     predict1 = model1.predict(nparraydata)
     predict10 = model10.predict(nparraydata)
     l3predict1 = l3model1.predict(nparraydata)
     l3predict10 = l3model10.predict(nparraydata)
             
-    stdre1,r1,mag1 = model1R2(predict1, phrase)
+    stdre1,r1,mag1 = model1R2(predict1, phrase, temperature)
     print('*******************1******************')
-    stdre2,r2,mag2 = model10R2(predict10, phrase)
+    stdre2,r2,mag2 = model10R2(predict10, phrase, temperature)
     print('*******************2******************')
-    stdre3,r3,mag3 = l3model1R2(l3predict1, phrase)
+    stdre3,r3,mag3 = l3model1R2(l3predict1, phrase, temperature)
     print('*******************3******************')
-    stdre4,r4,mag4 = l3model10R2(l3predict10, phrase)
+    stdre4,r4,mag4 = l3model10R2(l3predict10, phrase, temperature)
     print('*******************4******************')
             
     R = [r1,r2,r3,r4]
