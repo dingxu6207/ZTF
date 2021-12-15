@@ -16,6 +16,7 @@ import os,pickle,time
 from tensorflow.keras.models import load_model
 import pandas as pd
 import emcee
+import phoebe
 
 inclmodel = load_model('incl.hdf5')
 model1 = load_model('model1.hdf5')
@@ -225,11 +226,93 @@ def run(init_dist, nwalkers, niter,nburn):
 
     return emcee_trace 
 
+############################################################################
+############################################################################
+def plotphoebenol3T(padata, times):
+    #logger = phoebe.logger('warning')
+    incl = padata[1]*90
+    q = padata[2]
+    f = padata[3]
+    t2t1 = padata[4]
+    b = phoebe.default_binary(contact_binary=True)
+    times = times
+    b.add_dataset('lc', times=times, passband= 'LSST:r')
+
+    b['period@binary'] = 1
+
+    b['incl@binary'] = incl #58.528934
+    b['q@binary'] =   q
+    b['teff@primary'] = padata[0]*5850#6500#6500  #6208 
+    b['teff@secondary'] = padata[0]*5850*t2t1#6500*92.307556*0.01#6500*100.08882*0.01 #6087
+
+    b['sma@binary'] = 1#0.05 2.32
     
+    b.flip_constraint('pot', solve_for='requiv@primary')
+    b.flip_constraint('fillout_factor', solve_for='pot')
+    b['fillout_factor'] = f    #0.61845703
+    
+    try:
+        b.run_compute(irrad_method='none')
+        print('it is ok')
+        lumidata = b.compute_pblums()
+        pbdic = np.float(lumidata['pblum@secondary@lc01']/lumidata['pblum@primary@lc01'])
+        pr1 = b['value@requiv@primary@component']
+        pr2 = b['value@requiv@secondary@component']
+        
+        fluxmodel = b['value@fluxes@lc01@model']
+        resultflux = -2.5*np.log10(fluxmodel)
+        resultflux = resultflux - np.mean(resultflux)
+        return times,resultflux, pbdic, pr1, pr2
+        #return times,resultflux, 0, 0, 0
+    except:
+        return times, times, 0, 0, 0          
+    
+def plotphoebel3T(padata,times):
+    #logger = phoebe.logger('warning')  
+    incl = padata[1]*90
+    q = padata[2]
+    f = padata[3]
+    t2t1 = padata[4]
+    l3fra = padata[5]
+    b = phoebe.default_binary(contact_binary=True)
+    times = times
+    b.add_dataset('lc', times=times, passband= 'LSST:r')
+    b.set_value('l3_mode', 'fraction')
+    b['period@binary'] = 1
+
+    b['incl@binary'] = incl #58.528934
+    b['q@binary'] =   q
+    b['teff@primary'] = padata[0]*5850#6500#6500  #6208 
+    b['teff@secondary'] = padata[0]*5850*t2t1#6500*92.307556*0.01#6500*100.08882*0.01 #6087
+    b.set_value('l3_frac', l3fra)
+    b['sma@binary'] = 1#0.05 2.32
+    
+    b.flip_constraint('pot', solve_for='requiv@primary')
+    b.flip_constraint('fillout_factor', solve_for='pot')
+    b['fillout_factor'] = f    #0.61845703
+    
+    try:
+        b.run_compute(irrad_method='none')
+        print('it is ok')
+        lumidata = b.compute_pblums()
+        pbdic = np.float(lumidata['pblum@secondary@lc01']/lumidata['pblum@primary@lc01'])
+        pr1 = b['value@requiv@primary@component']
+        pr2 = b['value@requiv@secondary@component']
+
+        fluxmodel = b['value@fluxes@lc01@model']
+        resultflux = -2.5*np.log10(fluxmodel)
+        resultflux = resultflux - np.mean(resultflux)
+        return times,resultflux, pbdic, pr1, pr2
+    except:
+        return times,times, 0, 0, 0
+
+
+############################################################################
+############################################################################    
 
     
 path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-file = 'KIC 6050116.txt'
+file = 'KIC 10259530.txt'
 data = np.loadtxt(path+file)
 phase = data[:,0]
 datay = data[:,1]-np.mean(data[:,1])
@@ -238,7 +321,8 @@ datay = data[:,1]-np.mean(data[:,1])
 sx1,sy1 = interone(phase, datay)
 inclcom = inclprediction(sy1)
 
-T1 = 4569/5850
+inputtemper = 7736
+T1 = inputtemper/5850
 nparraydata = dataaddT(sy1, T1)
 
 ###############MCMC#######################
@@ -288,7 +372,7 @@ if inclcom>40:
     
     print(temppre)
     
-###################################################
+   ##################MCMC#########################
     #初始范围[T，incl,q,f,t2t1,l3]
     init_dist = temppre.copy()
     priors=init_dist.copy()
@@ -299,8 +383,18 @@ if inclcom>40:
     print('mu=',mu)
     print('sigma=',sigma)
     
+    ##################Phoebe###################
+    if modelindex == 0:
+        times,resultflux, pbdic, pr1, pr2 = plotphoebenol3T(mu, x)
+        
+    if modelindex == 1:
+        times,resultflux, pbdic, pr1, pr2 = plotphoebel3T(mu,x)
+        
+    ##############################################
     pre = predict(mu.reshape(1,-1))
     ax.plot(x, pre.flatten(),'-r') #理论数据
+    if pr1 != 0:
+        ax.plot(times, resultflux,'-g') #理论数据
     ax.yaxis.set_ticks_position('left') #将y轴的位置设置在右边
     ax.invert_yaxis() #y轴反向 
     

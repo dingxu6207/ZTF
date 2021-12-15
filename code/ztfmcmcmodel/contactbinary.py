@@ -16,19 +16,19 @@ b = phoebe.default_binary(contact_binary=True)
 times  = np.linspace(0,1,100)
 
 #b.add_dataset('lc', times=phoebe.linspace(0,1,150), passband= 'Kepler:mean')#compute_phases
-b.add_dataset('lc', compute_times=phoebe.linspace(0,1,100),passband= 'ZTF:r')
+b.add_dataset('lc', compute_times=phoebe.linspace(0,1,100),passband= 'LSST:r')
 
 b['period@binary'] = 1
 
-b['incl@binary'] =  77.112915   #58.528934
-b['q@binary'] =    17.416098*0.01
-b['teff@primary'] =  5910  #6208 
-b['teff@secondary'] = 5910*102.52537*0.01#6500*100.08882*0.01 #6087
+b['incl@binary'] =  0.72858162*90   #58.528934
+b['q@binary'] =    0.14229023
+b['teff@primary'] =  1.05976131*5850  #6208 
+b['teff@secondary'] = 1.05976131*5850*1.02938021#6500*100.08882*0.01 #6087
 
 b['sma@binary'] = 1#0.05 2.32
 b.flip_constraint('pot', solve_for='requiv@primary')
 b.flip_constraint('fillout_factor', solve_for='pot')
-b['fillout_factor'] = 93.112236*0.01
+b['fillout_factor'] = 0.6344573
 #b['fillout_factor@contact_envelope'] = 0.5
 
 #b['fillout_factor@contact_envelope@envelope@component'] = 0.5
@@ -80,7 +80,7 @@ np.savetxt('data0.lc',
 #print(fluxcha)
 
 path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-file = 'KIC 3104113.txt'
+file = 'KIC 10259530.txt'
 #file = 'V396Mon_Yang2001B.nrm'
 #path = 'E:\\shunbianyuan\\phometry\\pipelinecode\\pipeline\\LiXZ\\nihe\\'
 yuandata = np.loadtxt(path+file)
