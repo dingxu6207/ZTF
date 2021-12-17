@@ -20,15 +20,15 @@ b.add_dataset('lc', compute_times=phoebe.linspace(0,1,100),passband= 'LSST:r')
 
 b['period@binary'] = 1
 
-b['incl@binary'] =  0.72858162*90   #58.528934
-b['q@binary'] =    0.14229023
-b['teff@primary'] =  1.05976131*5850  #6208 
-b['teff@secondary'] = 1.05976131*5850*1.02938021#6500*100.08882*0.01 #6087
+b['incl@binary'] =  0.71348028*90   #58.528934
+b['q@binary'] =    0.40296497
+b['teff@primary'] =  1.0338496*5850  #6208 
+b['teff@secondary'] = 1.05976131*5850*0.92909411#6500*100.08882*0.01 #6087
 
 b['sma@binary'] = 1#0.05 2.32
 b.flip_constraint('pot', solve_for='requiv@primary')
 b.flip_constraint('fillout_factor', solve_for='pot')
-b['fillout_factor'] = 0.6344573
+b['fillout_factor'] = 0.01787572
 #b['fillout_factor@contact_envelope'] = 0.5
 
 #b['fillout_factor@contact_envelope@envelope@component'] = 0.5
@@ -50,8 +50,12 @@ b.flip_constraint(qualifier='fillout_factor@contact_envelope@envelope@component'
 
 #b.add_dataset('mesh', times=[0.25], dataset='mesh01')
 
-#b.run_compute(ntriangles=1000)
-b.run_compute(irrad_method='none')
+
+try:
+    b.run_compute(irrad_method='none')
+except:
+    b.run_compute(ntriangles=10000)
+    
 
 #plt.figure(0)
 #afig, mplfig = b.plot(show=True, legend=True)
@@ -64,7 +68,7 @@ print(b['fillout_factor@contact_envelope'])
 #print(b.filter(context='component'))
 #print(b.filter(context='component', kind='envelope'))
 #print(b.filter(context='system'))
-print(b.compute_pblums())
+#print(b.compute_pblums())
 #print(b.filter('pblum*'))
 print(b.filter('r*'))
 
@@ -80,7 +84,7 @@ np.savetxt('data0.lc',
 #print(fluxcha)
 
 path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-file = 'KIC 10259530.txt'
+file = 'KIC 10226388.txt'
 #file = 'V396Mon_Yang2001B.nrm'
 #path = 'E:\\shunbianyuan\\phometry\\pipelinecode\\pipeline\\LiXZ\\nihe\\'
 yuandata = np.loadtxt(path+file)

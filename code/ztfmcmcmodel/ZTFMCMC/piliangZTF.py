@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Dec 13 13:24:09 2021
+Created on Thu Dec 16 17:27:28 2021
 
 @author: dingxu
 """
+
 import scipy.signal as ss 
 from scipy.optimize import curve_fit
 import pandas as pd
@@ -25,6 +26,7 @@ l3model1 = load_model('model1l3.hdf5')
 l3model10 = load_model('model10l3.hdf5')
 model10mc = load_model('model10mc.hdf5')
 l3model10mc = load_model('model10l3mc.hdf5')
+predicT = load_model('modelT.hdf5')
 
 def calculater(ydata, caldata):
     res_ydata  = np.array(ydata) - np.array(caldata)
@@ -130,7 +132,7 @@ def interone(datax, datay):
     sx1 = np.linspace(0,1,100)
     s = np.diff(interdata,2).std()/np.sqrt(6)
     num = len(datay)
-
+    datax = np.sort(datax)
     func1 = interpolate.UnivariateSpline(datax, interdata,s=s*s*num)#强制通过所有点
     sy1 = func1(sx1)
     
@@ -318,93 +320,139 @@ def plotphoebel3T(padata,times):
 
 ############################################################################
 ############################################################################    
-
+filepkl = 'Z:/DingXu/ZTF_jkf/alldata/0002.pkl'
+dat = pickle.load(open(filepkl,'rb'))
+tot = len(dat)
+def loaddata(i):
+    idname = dat[i][0]
+    name = dat[i][1]
+    RA = dat[i][2]
+    DEC = dat[i][3]
+    P = dat[i][4]
+    gmag = dat[i][5]
+    rmag = dat[i][6]
+    xy = dat[i][7] 
+    xy[:,1] = xy[:,1] -np.mean(xy[:,1])
+    return name, idname, RA, DEC, P, gmag, rmag, xy[:,0], xy[:,1]
     
-path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-file = 'KIC 10389809.txt'
-data = np.loadtxt(path+file)
-phase = data[:,0]
-datay = data[:,1]-np.mean(data[:,1])
+def predicttemperature(gmag, ramg):
+    if (gmag != 0) and (gmag != 0):
+        magrg = [gmag, ramg]
+        npmagrg = np.array(magrg)
+        inputmag = np.reshape(npmagrg, [1,2])
+        temparaturein = predicT.predict(inputmag)
+        temparaturein = temparaturein[0][0]
+    else:
+        temparaturein =  5000
+        
+    return temparaturein
+#########################################################################
+#######################################################################
 
 
-sx1,sy1 = interone(phase, datay)
-inclcom = inclprediction(sy1)
-
-inputtemper = 5786
-T1 = inputtemper/5850
-nparraydata = dataaddT(sy1, T1)
-
-###############MCMC#######################
-x, noisy, sigma = intertwo(phase, datay)
-nwalkers = 20
-niter = 500
-nburn=200 #保留最后多少点用于计算
-##############MCMC#########################
-
-if inclcom>40:
-    predict1 = model1.predict(nparraydata)
-    predict10 = model10.predict(nparraydata)
-    l3predict1 = l3model1.predict(nparraydata)
-    l3predict10 = l3model10.predict(nparraydata)
+for i in range(0, tot):
+    name, idname, RA, DEC, P, gmag, rmag, phase, datay = loaddata(i)
+    try:
+        sx1,sy1 = interone(phase, datay)
+    except:
+        continue
+    inclcom = inclprediction(sy1)
+    #inputtemper = 5786
+    inputtemper = predicttemperature(gmag, rmag)
+    print('temperature is : '+str(inputtemper))
     
-    ligdata1, stdr1, r_squared1 = model1R2(predict1, sy1, T1)
-    ligdata10, stdr10, r_squared10 = model10R2(predict10, sy1, T1)
-    ligdata1l3, stdr1l3, r_squared1l3 = model1l3R2(l3predict1, sy1, T1)
-    ligdata10l3, stdr10l3, r_squared10l3 = model10l3R2(l3predict10, sy1, T1)
-    
-    R = [r_squared1, r_squared10, r_squared1l3, r_squared1l3]
-    index = np.argmax(R)
-    print('index= '+str(index)+'  R2='+str(R[index]))
+    T1 = inputtemper/5850
     
     
-    plt.figure(1)
-    ax = plt.gca()
-    ax.plot(x, noisy, '.') 
+    nparraydata = dataaddT(sy1, T1)
     
-    if index == 0 :    
-        temppre = tupledata(predict1, T1, 0)
-        modelindex = 0
-        ax.plot(sx1, ligdata1[0],'-b')
-    if index == 1 :    
-        temppre = tupledata(predict10, T1, 1)
-        modelindex = 0
-        ax.plot(sx1, ligdata10[0],'-b')
-    if index == 2 : 
-        temppre = tupledata(l3predict1, T1, 2)
-        modelindex = 1
-        ax.plot(sx1, ligdata1l3[0],'-b')
-    if index == 3 :   
-        temppre = tupledata(l3predict10, T1, 3)
-        modelindex = 1
-        ax.plot(sx1, ligdata10l3[0],'-b')
+    ###############MCMC#######################
+    x, noisy, sigma = intertwo(phase, datay)
+    nwalkers = 20
+    niter = 500
+    nburn=200 #保留最后多少点用于计算
+    ##############MCMC#########################
+    
+    if inclcom>40:
+        predict1 = model1.predict(nparraydata)
+        predict10 = model10.predict(nparraydata)
+        l3predict1 = l3model1.predict(nparraydata)
+        l3predict10 = l3model10.predict(nparraydata)
+    
+        ligdata1, stdr1, r_squared1 = model1R2(predict1, sy1, T1)
+        ligdata10, stdr10, r_squared10 = model10R2(predict10, sy1, T1)
+        ligdata1l3, stdr1l3, r_squared1l3 = model1l3R2(l3predict1, sy1, T1)
+        ligdata10l3, stdr10l3, r_squared10l3 = model10l3R2(l3predict10, sy1, T1)
+    
+        R = [r_squared1, r_squared10, r_squared1l3, r_squared1l3]
+        index = np.argmax(R)
+        print('index= '+str(index)+'  R2='+str(R[index]))
+    
+    
+        plt.figure(1)
+        ax = plt.gca()
+        ax.plot(x, noisy, '.')
+        
+        if index == 0 :    
+            temppre = tupledata(predict1, T1, 0)
+            modelindex = 0
+            ax.plot(sx1, ligdata1[0],'-b')
+            
+        if index == 1 :    
+            temppre = tupledata(predict10, T1, 1)
+            modelindex = 0
+            ax.plot(sx1, ligdata10[0],'-b')
+            
+        if index == 2 : 
+            temppre = tupledata(l3predict1, T1, 2)
+            modelindex = 1
+            ax.plot(sx1, ligdata1l3[0],'-b')
+            
+        if index == 3 :   
+            temppre = tupledata(l3predict10, T1, 3)
+            modelindex = 1
+            ax.plot(sx1, ligdata10l3[0],'-b')
   
     
-    print(temppre)
+        print(temppre)
     
    ##################MCMC#########################
     #初始范围[T，incl,q,f,t2t1,l3]
-    init_dist = temppre.copy()
-    priors=init_dist.copy()
-    ndim = len(priors) #维度数   
-    emcee_trace  = run(priors, nwalkers, niter,nburn) #run mcmc
-    mu=(emcee_trace.mean(axis=1)) #参数均值
-    sigma=(emcee_trace.std(axis=1)) #参数误差
-    print('mu=',mu)
-    print('sigma=',sigma)
+        init_dist = temppre.copy()
+        priors=init_dist.copy()
+        ndim = len(priors) #维度数   
+        emcee_trace  = run(priors, nwalkers, niter,nburn) #run mcmc
+        mu=(emcee_trace.mean(axis=1)) #参数均值
+        sigma=(emcee_trace.std(axis=1)) #参数误差
+        print('mu=',mu)
+        print('sigma=',sigma)
     
     ##################Phoebe###################
-    if modelindex == 0:
-        times,resultflux, pbdic, pr1, pr2 = plotphoebenol3T(mu, x)
+        try:
+            if modelindex == 0:
+                times,resultflux, pbdic, pr1, pr2 = plotphoebenol3T(mu, x)
         
-    if modelindex == 1:
-        times,resultflux, pbdic, pr1, pr2 = plotphoebel3T(mu,x)
+            if modelindex == 1:
+                times,resultflux, pbdic, pr1, pr2 = plotphoebel3T(mu,x)
         
+            if pr1 != 0:
+                ax.plot(times, resultflux,'-g') #理论数据
+        except:
+            print('phoebe is error!')
     ##############################################
-    pre = predict(mu.reshape(1,-1))
-    ax.plot(x, pre.flatten(),'-r') #理论数据
-    if pr1 != 0:
-        ax.plot(times, resultflux,'-g') #理论数据
-    ax.yaxis.set_ticks_position('left') #将y轴的位置设置在右边
-    ax.invert_yaxis() #y轴反向 
+        pre = predict(mu.reshape(1,-1))
+        ax.plot(x, pre.flatten(),'-r') #理论数据
+        ax.yaxis.set_ticks_position('left') #将y轴的位置设置在右边
+        ax.invert_yaxis() #y轴反向 
+        plt.pause(1)
+        plt.clf()
     
+
+
+
+
+
+
+
+
     

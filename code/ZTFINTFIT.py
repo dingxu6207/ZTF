@@ -15,19 +15,18 @@ from scipy import interpolate
 CSV_FILE_PATH = '55.csv'
 dfdata = pd.read_csv(CSV_FILE_PATH)
 
+dfdata = dfdata[dfdata['band']=='r']
+
 hjd = dfdata['HJD']
 mag = dfdata['mag']
 
-nphjd = np.array(hjd)
-npmag = np.array(mag)
+hjdmag = dfdata[['HJD', 'mag']] 
+nphjdmag = np.array(hjdmag)
 
-#hang = 151
-#nphjd = nphjd[0:hang]
-#npmag = npmag[0:hang]-np.mean(npmag[0:hang])
+nphjd = nphjdmag[:,0]
+npmag = nphjdmag[:,1]
 
-hang = 287
-nphjd = nphjd[hang:]
-npmag = npmag[hang:]-np.mean(npmag[hang:])
+
 
 P = 0.3702918
 phases = foldAt(nphjd, P)
