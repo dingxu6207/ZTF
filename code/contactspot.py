@@ -20,17 +20,19 @@ b.add_dataset('lc', compute_times=phoebe.linspace(0,1,100),passband= 'LSST:r')
 
 b['period@binary'] = 1
 
-b['incl@binary'] =  72.6272   #58.528934
-b['q@binary'] =    0.28
-b['teff@primary'] =  6500  #6208 
-b['teff@secondary'] = 6500*98.5643*0.01#6500*100.08882*0.01 #6087
-
+b['incl@binary'] =  90   #58.528934
+b['q@binary'] =    0.8
+b['teff@primary'] =  5800  #6208 
+b['teff@secondary'] = 5800#6500*100.08882*0.01 #6087
+b.set_value('l3_mode', 'fraction')
+l3fra = 0.2
+b.set_value('l3_frac', l3fra) 
 b['sma@binary'] = 1#0.05 2.32
 b.flip_constraint('pot', solve_for='requiv@primary')
 b.flip_constraint('fillout_factor', solve_for='pot')
-b['fillout_factor'] = 3.67445*0.1
+b['fillout_factor'] = 0.5
 
-b.add_feature('spot', component='secondary', feature='spot01', relteff=0.9, radius=20, colat=90, long=180)
+#b.add_feature('spot', component='secondary', feature='spot01', relteff=0.9, radius=20, colat=90, long=180)
 
 #b.add_dataset('mesh', times=[0.25], dataset='mesh01')
 b.add_dataset('mesh', compute_times=b.to_time(0.25), columns='teffs')

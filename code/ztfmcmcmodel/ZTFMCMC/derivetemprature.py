@@ -90,7 +90,7 @@ filepath = MODEL+'weights-improvement-{epoch:05d}-{val_loss:.4f}.hdf5'
 checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True,mode='min')
 early_stopping = EarlyStopping(patience=200)
 callback_lists = [early_stopping, checkpoint, PredictionCallback()]
-history = models.fit(dataX, dataY, batch_size=10, epochs=2000, validation_data=(testX, testY),shuffle=True,callbacks=callback_lists)
+history = models.fit(dataX, dataY, batch_size=10, epochs=20000, validation_data=(testX, testY),shuffle=True,callbacks=callback_lists)
 
 predictY = models.predict(testX)
 predictdatay = models.predict(dataX)
