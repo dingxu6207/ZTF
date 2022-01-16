@@ -34,7 +34,7 @@ r = Gaia.query_object_async(coordinate=coord, width=width, height=height)
 radectemp = np.transpose((r['ra'], r['dec'], r['teff_val']))
 
 temp = []
-for i in range (0, 100000):
+for i in range (0, 400):
     coord = SkyCoord(ra = radecmag[i,0], dec = radecmag[i,1], unit=(u.degree, u.degree), frame='icrs')
     width = u.Quantity(1/3600, u.deg)
     height = u.Quantity(1/3600, u.deg)
@@ -44,16 +44,16 @@ for i in range (0, 100000):
     
     try:
         r = Gaia.query_object_async(coordinate=coord, width=width, height=height)
-        radectemp = np.transpose((r['ra'], r['dec'], r['teff_val']))
-        datatemp = [radecmag[i,2], radecmag[i,3], radectemp[0][2]]
+        radectemp = np.transpose((r['ra'], r['dec'], r['phot_g_mean_mag'],  r['phot_bp_mean_mag'], r['phot_rp_mean_mag'],r['teff_val']))
+        datatemp = [radecmag[i,2], radecmag[i,3], radectemp[0][2], radectemp[0][3], radectemp[0][4], radectemp[0][5]]
         temp.append(datatemp)
         print(str(i)+':')
         print(datatemp)
     except:
         try:
             r = Gaia.query_object_async(coordinate=coord, width=width, height=height)
-            radectemp = np.transpose((r['ra'], r['dec'], r['teff_val']))
-            datatemp = [radecmag[i,2], radecmag[i,3], radectemp[0][2]]
+            radectemp = np.transpose((r['ra'], r['dec'], r['phot_g_mean_mag'],  r['phot_bp_mean_mag'], r['phot_rp_mean_mag'], r['teff_val']))
+            datatemp = [radecmag[i,2], radecmag[i,3], radectemp[0][2], radectemp[0][3], radectemp[0][4], radectemp[0][5]]
             temp.append(datatemp)
             print(str(i)+':')
             print(datatemp)
@@ -64,7 +64,7 @@ for i in range (0, 100000):
     
 nptemp = np.array(temp)
 
-np.savetxt('radectemparature.txt', nptemp)
+np.savetxt('radecGbprptemparature.txt', nptemp)
 
     
     

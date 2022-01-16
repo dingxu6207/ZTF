@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 
 magtemprature = np.loadtxt('radectemparature.txt')
 
-
 magtemprature = magtemprature[~np.isnan(magtemprature[:,2])]
 
 magtemprature = magtemprature[magtemprature[:,0] != 0]
@@ -21,3 +20,5 @@ plt.hist(magtemprature[:,2], bins=100)
 
 
 np.savetxt('magtemprature.txt', magtemprature)
+plt.xlabel('temperature',fontsize=18)
+plt.ylabel('frequency',fontsize=18)

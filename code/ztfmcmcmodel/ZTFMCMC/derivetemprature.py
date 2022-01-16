@@ -72,9 +72,6 @@ def displayimg(testY, predictY):
     plt.plot(testY, cancha,'.')
     plt.pause(0.1)
 
-    
-    
-
 class PredictionCallback(tf.keras.callbacks.Callback):    
     def on_epoch_end(self, epoch, logs={}):
         #print(self.validation_data[0])
