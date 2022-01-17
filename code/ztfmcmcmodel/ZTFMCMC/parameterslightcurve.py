@@ -22,9 +22,13 @@ import corner
 model10mc = load_model('model10mc.hdf5')
 l3model10mc = load_model('model10l3mc.hdf5')
 
-path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-file = 'KIC 7118621.txt'
-data = np.loadtxt(path+file)
+#path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
+#file = 'KIC 7118621.txt'
+#data = np.loadtxt(path+file)
+
+fileone = 'ZTFtestdata.txt'
+data = np.loadtxt(fileone)
+
 phrase = data[:,0]
 datay = data[:,1]-np.mean(data[:,1])
 x = np.linspace(0,1,100) #x轴
@@ -39,11 +43,12 @@ nburn=200 #保留最后多少点用于计算
 index = 0
 
 #初始范围[T，incl,q,f,t2t1,l3]
-init_dist = [(0.7785299145299146, 1.1677948717948718), 
-             (0.6140856170654296, 1.1404447174072265),
-             (1.1279665946960449, 3.3838997840881344),
-             (0.08439389419555664, 0.15673151779174804),
-             (0.6771996383666992, 1.2576564712524414)]
+init_dist = [(0.7100170940170941, 1.0650256410256411), 
+             (0.39540068308512366, 0.734315554300944), 
+             (0.4441933441162109, 1.3325800323486328), 
+             (0.04026409578323364, 0.07477617788314819), 
+             (0.6427430419921875, 1.1936656494140625)]
+
 priors=init_dist.copy()
 ndim = len(priors) #维度数
 

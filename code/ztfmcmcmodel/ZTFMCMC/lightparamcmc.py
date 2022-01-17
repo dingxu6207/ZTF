@@ -154,11 +154,11 @@ def dataaddT(data, T1):
 #######################################################################
 
     
-path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-file = 'KIC 6344429.txt'
-data = np.loadtxt(path+file)
-#fileone = 'phasemag.txt'
-#data = np.loadtxt(fileone)
+#path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
+#file = 'KIC 6344429.txt'
+#data = np.loadtxt(path+file)
+fileone = 'ZTFtestdata.txt'
+data = np.loadtxt(fileone)
 phase = data[:,0]
 datay = data[:,1]-np.mean(data[:,1])
 
@@ -166,7 +166,7 @@ datay = data[:,1]-np.mean(data[:,1])
 sx1,sy1 = interone(phase, datay)
 inclcom = inclprediction(sy1)
 
-T1 = 6816/5850
+T1 = 5192/5850
 nparraydata = dataaddT(sy1, T1)
 
 

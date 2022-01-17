@@ -74,6 +74,45 @@ def ztf_2(CSV_FILE_PATH, P):
      
     return phasemag
 
+def zerophasemag(phases, resultmag):
+    
+    listmag = resultmag.tolist()
+    listmag.extend(listmag)  
+    listphrase = phases.tolist()
+    listphrase.extend(listphrase+np.max(1)) 
+    #############以上进行拼接#####################
+    
+    nplistmag = np.array(listmag)
+    nplistphase = np.array(listphrase)
+    try:
+        s = np.diff(nplistmag,2).std()/np.sqrt(6)
+        num = len(nplistmag)
+        sx1 = np.linspace(0,1,1000)
+        nplistphase = np.sort(nplistphase)
+        func1 = interpolate.UnivariateSpline(nplistphase, nplistmag,s=s*s*num)#强制通过所有点
+        sy1 = func1(sx1)
+        indexmag = np.argmax(sy1)
+        nplistphase = nplistphase-sx1[indexmag]
+        #nplistphrase = np.array(listphrase)
+    except:
+        try:
+            sortmag = np.sort(nplistmag)
+            maxindex = np.median(sortmag[-9:])
+            indexmag = listmag.index(maxindex)
+            nplistphase = nplistphase-nplistphase[indexmag]
+        except:
+            return [0,0]
+#################以上求最大值对应的位置#########################
+    phasemag = np.vstack((nplistphase, nplistmag)) #纵向合并矩阵
+    phasemag = phasemag.T
+    
+    phasemag = phasemag[phasemag[:,0]>=0]
+    phasemag = phasemag[phasemag[:,0]<=1]
+     
+    return phasemag
+    
+    
+
 def computeperiod(npjdmag):
     JDtime = npjdmag[:,0]
     targetflux = npjdmag[:,1]
@@ -140,8 +179,8 @@ def stddata(npjdmag, P):
     stdndata = np.std(yuandata)
     return stdndata/datanoise
 
-RAp = 0.00163
-DECp = 60.86358    
+RAp = 0.21008
+DECp = 61.72356
 lcq = lightcurve.LCQuery.from_position(RAp, DECp, 1)   
 dfdata = lcq.data
 dfdata = dfdata[dfdata["filtercode"]=='zr']
@@ -159,4 +198,14 @@ showmjdmag(npmjdmag)
 
 phases, resultmag = pholdata(npmjdmag, P2)
 showfig(phases, resultmag)
+
+phasemag = zerophasemag(phases, resultmag)
+plt.figure(6)
+ax = plt.gca()
+ax.plot(phasemag[:,0], phasemag[:,1], '.')
+plt.xlabel('phase',fontsize=14)
+plt.ylabel('mag',fontsize=14)
+ax.yaxis.set_ticks_position('left') #将y轴的位置设置在右边
+ax.invert_yaxis() #y轴反向
      
+np.savetxt('ZTFtestdata.txt', phasemag)
