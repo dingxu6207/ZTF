@@ -16,14 +16,14 @@ import os,pickle,time
 from tensorflow.keras.models import load_model
 import pandas as pd
 
-
-inclmodel = load_model('incl.hdf5')
-model1 = load_model('model1.hdf5')
-model10 = load_model('model10.hdf5')
-l3model1 = load_model('model1l3.hdf5')
-l3model10 = load_model('model10l3.hdf5')
-model10mc = load_model('model10mc.hdf5')
-l3model10mc = load_model('model10l3mc.hdf5')
+path = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\TESSMCMC\\model\\'
+inclmodel = load_model(path+'incl.hdf5')
+model1 = load_model(path+'model1.hdf5')
+model10 = load_model(path+'model10.hdf5')
+l3model1 = load_model(path+'model1l3.hdf5')
+l3model10 = load_model(path+'model10l3.hdf5')
+model10mc = load_model(path+'model10mc.hdf5')
+l3model10mc = load_model(path+'model10l3mc.hdf5')
 
 def calculater(ydata, caldata):
     res_ydata  = np.array(ydata) - np.array(caldata)
@@ -105,19 +105,19 @@ def tupledata(data, T1, flag):
     temp = []
     predata = data[0].tolist()
     tup1 = (T1*0.8, 1.2*T1)
-    tup2 = ((predata[0]/90)*0.7, (predata[0]/90)*1.3)
+    tup2 = ((predata[0]/90)*0.8, (predata[0]/90)*1.2)
     
     if flag==0 or flag==2:
-        tup3 = ((predata[1]/100)*0.5, (predata[1]/100)*1.5)
+        tup3 = ((predata[1]/100)*0.8, (predata[1]/100)*1.2)
         
     if flag==1 or flag==3:
-        tup3 = ((predata[1]/10)*0.5, (predata[1]/10)*1.5)
+        tup3 = ((predata[1]/10)*0.8, (predata[1]/10)*1.2)
     
-    tup4 = ((predata[2]/100)*0.7, (predata[2]/100)*1.3)
-    tup5 = ((predata[3]/100)*0.7, (predata[3]/100)*1.3)
+    tup4 = ((predata[2]/100)*0.8, (predata[2]/100)*1.2)
+    tup5 = ((predata[3]/100)*0.8, (predata[3]/100)*1.2)
     
     if flag==2 or flag==3:
-        tup6 = ((predata[4]/100)*0.7, (predata[4]/100)*1.3)
+        tup6 = ((predata[4]/100)*0.8, (predata[4]/100)*1.2)
         temp = [tup1, tup2, tup3, tup4, tup5, tup6]
     else:
         temp = [tup1, tup2, tup3, tup4, tup5]
@@ -152,13 +152,16 @@ def dataaddT(data, T1):
 
 #######################################################################
 #######################################################################
-
-    
 #path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-#file = 'KIC 6344429.txt'
+#file = 'KIC 11924311.txt'
 #data = np.loadtxt(path+file)
-fileone = 'ZTFtestdata.txt'
-data = np.loadtxt(fileone)
+    
+path = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\TESSMCMC\\EWDATA\\'
+file = 'TIC 55896456.txt'
+data = np.loadtxt(path+file)
+
+#fileone = 'ZTFtestdata.txt'
+#data = np.loadtxt(fileone)
 phase = data[:,0]
 datay = data[:,1]-np.mean(data[:,1])
 
@@ -166,7 +169,7 @@ datay = data[:,1]-np.mean(data[:,1])
 sx1,sy1 = interone(phase, datay)
 inclcom = inclprediction(sy1)
 
-T1 = 4609/5850
+T1 =  6662.70/5850
 nparraydata = dataaddT(sy1, T1)
 
 
@@ -181,7 +184,7 @@ if inclcom>40:
     ligdata1l3, stdr1l3, r_squared1l3 = model1l3R2(l3predict1, sy1, T1)
     ligdata10l3, stdr10l3, r_squared10l3 = model10l3R2(l3predict10, sy1, T1)
     
-    R = [r_squared1, r_squared10, r_squared1l3, r_squared1l3]
+    R = [r_squared1, r_squared10, r_squared1l3, r_squared10l3]
     index = np.argmax(R)
     print('index= '+str(index)+'  R2='+str(R[index]))
     

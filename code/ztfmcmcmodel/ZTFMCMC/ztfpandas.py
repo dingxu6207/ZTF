@@ -39,7 +39,8 @@ cornordata = dfdata[['Period', 'colorindex', 'T1', 'incl', 'q', 't2t1', 'f', 'pr
 
 npcor = np.array(cornordata.iloc[0:,0:])
 
-figure = corner.corner(npcor, bins=100,labels=[r"$Period$", r"$colorindex$", r"$T1$", r"$incl$", r"$q$", r"$t2t1$", r"$f$", r"$pr1$", r"$pr2$", r"$pbdic$"], show_titles=True)
+figure = corner.corner(npcor, bins=100,labels=[r"$Period$", r"$colorindex$", r"$T1$", r"$incl$", r"$q$", r"$t2t1$", r"$f$", r"$pr1$", r"$pr2$", r"$pbdic$"],
+                       show_titles=True, title_kwargs={"fontsize": 15}, label_kwargs={"fontsize": 15})
 #figure = corner.corner(npcor, bins=100,labels=[r"$Period$", r"$colorindex$"])
 plt.figure(1)
 plt.savefig('corner.png')

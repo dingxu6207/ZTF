@@ -15,19 +15,25 @@ import matplotlib.pylab as plt
 from scipy import interpolate
 import os,pickle,time
 from tensorflow.keras.models import load_model
+#from keras.models import load_model
 import pandas as pd
 import emcee
 import corner
 
-model10mc = load_model('model10mc.hdf5')
-l3model10mc = load_model('model10l3mc.hdf5')
+path = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\TESSMCMC\\model\\'
+model10mc = load_model(path+'model10mc.hdf5')
+l3model10mc = load_model(path+'model10l3mc.hdf5')
 
 #path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-#file = 'KIC 7118621.txt'
+#file = 'KIC 11924311.txt'
 #data = np.loadtxt(path+file)
 
-fileone = 'ZTFtestdata.txt'
-data = np.loadtxt(fileone)
+path = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\TESSMCMC\\EWDATA\\'
+file = 'TIC 55896456.txt'
+data = np.loadtxt(path+file)
+
+#fileone = 'ZTFtestdata.txt'
+#data = np.loadtxt(fileone)
 
 phrase = data[:,0]
 datay = data[:,1]-np.mean(data[:,1])
@@ -43,11 +49,11 @@ nburn=200 #保留最后多少点用于计算
 index = 0
 
 #初始范围[T，incl,q,f,t2t1,l3]
-init_dist = [(0.6302905982905984, 0.9454358974358974), 
-             (0.7498686981201172, 1.3926132965087892), 
-             (1.3516909599304199, 4.055072879791259), 
-             (0.007673085331916808, 0.014250015616416931), 
-             (0.6942263565063477, 1.2892775192260744)]
+init_dist = [(0.9111384615384616, 1.3667076923076922),
+             (0.7113870578342014, 1.067080586751302),
+             (0.5539359130859375, 0.8309038696289063),
+             (0.5249301147460937, 0.7873951721191407),
+             (0.7962756958007813, 1.1944135437011718)]
 
 priors=init_dist.copy()
 ndim = len(priors) #维度数
@@ -55,14 +61,17 @@ ndim = len(priors) #维度数
 def predict(allpara):
     
     arraymc = np.array(allpara)
+    #print(arraymc)
     
     if index == 0:
         mcinput = np.reshape(arraymc,(1,5))
-        lightdata = model10mc.predict(mcinput)
+        #lightdata = model10mc.predict(mcinput)
+        lightdata = model10mc(mcinput)
         
     if index == 1:
         mcinput = np.reshape(arraymc,(1,6))
-        lightdata = l3model10mc.predict(mcinput)
+        #lightdata = l3model10mc.predict(mcinput)
+        lightdata = l3model10mc(mcinput)
         
     return lightdata[0]
 
@@ -88,7 +97,8 @@ def lnprob(z): #计算后仰概率
 
     if not np.isfinite(lnp):
             return -np.inf
-
+         
+    print('it is ok')
 
     output = predict(z)
 
@@ -137,12 +147,12 @@ if index == 0:
 plt.savefig('corner.png')
 #------------------------------------------------------------
 #用输出值预测理论曲线
-pre=predict(mu.reshape(1,-1))
+pre = predict(mu.reshape(1,-1))
 plt.figure()
 ax = plt.gca()
-ax.plot(x,noisy,'.') #原始数据
-#ax.plot(phrase, datay, '.')
-ax.plot(x,pre.flatten(),'-r') #理论数据
-
+#ax.plot(x,noisy,'.') #原始数据
+ax.plot(phrase, datay, '.')
+#ax.plot(x,pre.flatten(),'-r') #理论数据
+ax.plot(x,pre,'-r')
 ax.yaxis.set_ticks_position('left') #将y轴的位置设置在右边
 ax.invert_yaxis() #y轴反向
