@@ -31,7 +31,7 @@ b['sma@binary'] = 1#0.05 2.32
 b.flip_constraint('pot', solve_for='requiv@primary')
 b.flip_constraint('fillout_factor', solve_for='pot')
 b['fillout_factor'] = 0.5
-
+b.set_value('ecc', component='binary', value=0)
 #b.add_feature('spot', component='secondary', feature='spot01', relteff=0.9, radius=20, colat=90, long=180)
 
 #b.add_dataset('mesh', times=[0.25], dataset='mesh01')

@@ -104,7 +104,7 @@ def model10l3R2(data, sy1, T1):
 def tupledata(data, T1, flag):
     temp = []
     predata = data[0].tolist()
-    tup1 = (T1*0.8, 1.2*T1)
+    tup1 = (T1*0.9, 1.1*T1)
     tup2 = ((predata[0]/90)*0.8, (predata[0]/90)*1.2)
     
     if flag==0 or flag==2:
@@ -157,7 +157,7 @@ def dataaddT(data, T1):
 #data = np.loadtxt(path+file)
     
 path = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\TESSMCMC\\EWDATA\\'
-file = 'TIC 55896456.txt'
+file = 'TIC 445133704.txt'
 data = np.loadtxt(path+file)
 
 #fileone = 'ZTFtestdata.txt'
@@ -169,7 +169,7 @@ datay = data[:,1]-np.mean(data[:,1])
 sx1,sy1 = interone(phase, datay)
 inclcom = inclprediction(sy1)
 
-T1 =  6662.70/5850
+T1 = 5490.03/5850
 nparraydata = dataaddT(sy1, T1)
 
 
@@ -203,6 +203,8 @@ if inclcom>40:
     if index == 3 :   
         temppre = tupledata(l3predict10, T1, 3)
         plt.plot(sx1, ligdata10l3[0],'.')
+    plt.xlabel('phase',fontsize=18)
+    plt.ylabel('mag',fontsize=18)
     ax = plt.gca()
     ax.yaxis.set_ticks_position('left') #将y轴的位置设置在右边
     ax.invert_yaxis() #y轴反向  

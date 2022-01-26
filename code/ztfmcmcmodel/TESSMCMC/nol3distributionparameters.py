@@ -12,7 +12,7 @@ import pandas as pd
 import seaborn as sns
 
 path = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\TESSMCMC\\TESSSAMPLE\\'
-lightdata = np.loadtxt(path+'savedata01050Tl3.txt') 
+lightdata = np.loadtxt(path+'savedata01050T.txt') 
 #sns.set()
 
 
@@ -50,12 +50,4 @@ tdata = lightdata[:,105]
 sns.kdeplot(tdata,shade=True)
 plt.title('T2/T1',fontsize=18)
 plt.xlabel('T2/T1',fontsize=18)
-plt.ylabel('frequency',fontsize=18)
-
-
-plt.figure(5)
-tdata = lightdata[:,106]
-sns.kdeplot(tdata,shade=True)
-plt.title('l3',fontsize=18)
-plt.xlabel('l3',fontsize=18)
 plt.ylabel('frequency',fontsize=18)

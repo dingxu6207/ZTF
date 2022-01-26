@@ -50,7 +50,7 @@ def ztf_2(CSV_FILE_PATH, P):
     try:
         s = np.diff(nplistmag,2).std()/np.sqrt(6)
         num = len(nplistmag)
-        sx1 = np.linspace(0,1,1000)
+        sx1 = np.linspace(0,1,10000)
         nplistphase = np.sort(nplistphase)
         func1 = interpolate.UnivariateSpline(nplistphase, nplistmag,s=s*s*num)#强制通过所有点
         sy1 = func1(sx1)
@@ -87,7 +87,7 @@ def zerophasemag(phases, resultmag):
     try:
         s = np.diff(nplistmag,2).std()/np.sqrt(6)
         num = len(nplistmag)
-        sx1 = np.linspace(0,1,1000)
+        sx1 = np.linspace(0,1,10000)
         nplistphase = np.sort(nplistphase)
         func1 = interpolate.UnivariateSpline(nplistphase, nplistmag,s=s*s*num)#强制通过所有点
         sy1 = func1(sx1)
@@ -108,10 +108,37 @@ def zerophasemag(phases, resultmag):
     
     phasemag = phasemag[phasemag[:,0]>=0]
     phasemag = phasemag[phasemag[:,0]<=1]
-     
+    
     return phasemag
     
+def zerophasemagN(phases, resultmag):
+    listmag = resultmag.tolist()
+    listmag.extend(listmag)  
+    listphrase = phases.tolist()
+    listphrase.extend(listphrase+np.max(phases)) 
+    #############以上进行拼接#####################
     
+    nplistmag = np.array(listmag)
+    nplistphase = np.array(listphrase)
+
+    s = np.diff(nplistmag,2).std()/np.sqrt(6)
+    num = len(nplistmag)
+    sx1 = np.linspace(0,1,10000)
+    nplistphase = np.sort(nplistphase)
+    func1 = interpolate.UnivariateSpline(nplistphase, nplistmag,s=s*s*num)#强制通过所有点
+    sy1 = func1(sx1)
+    indexmag = np.argmax(sy1)
+    nplistphase = nplistphase-sx1[indexmag]
+    #nplistphrase = np.array(listphrase)
+
+    #################以上求最大值对应的位置#########################
+    phasemag = np.vstack((nplistphase, nplistmag)) #纵向合并矩阵
+    phasemag = phasemag.T
+    
+    phasemag = phasemag[phasemag[:,0]>=0]
+    phasemag = phasemag[phasemag[:,0]<=1]
+    
+    return phasemag    
 
 def computeperiod(npjdmag):
     JDtime = npjdmag[:,0]
@@ -199,7 +226,7 @@ showmjdmag(npmjdmag)
 phases, resultmag = pholdata(npmjdmag, P2)
 showfig(phases, resultmag)
 
-phasemag = zerophasemag(phases, resultmag)
+phasemag = zerophasemagN(phases, resultmag)
 plt.figure(6)
 ax = plt.gca()
 ax.plot(phasemag[:,0], phasemag[:,1], '.')

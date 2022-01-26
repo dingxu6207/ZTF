@@ -345,7 +345,7 @@ path = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\TESSM
 figurepath = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\TESSMCMC\\figure\\'
 for i  in range(0,hang):
     np.savetxt('1.txt', [i,0])
-    if i < 174:
+    if i < 403:
         continue
     
     name = df.iloc[i,1]
@@ -445,6 +445,7 @@ for i  in range(0,hang):
         except:
             pbdic, pr1, pr2 = 0, 0 ,0
             print('phoebe is error!')
+            continue
     ##############################################
         doflag = 0
         if not((times == resultflux).all()):
@@ -458,6 +459,8 @@ for i  in range(0,hang):
         ax.yaxis.set_ticks_position('left') #将y轴的位置设置在右边
         ax.invert_yaxis() #y轴反向 
         plt.title(name)
+        plt.xlabel('Phase',fontsize=18)
+        plt.ylabel('mag',fontsize=18)
         plt.savefig(figurepath+name+'.jpg') #修改2处
         plt.pause(1)
         plt.clf()
