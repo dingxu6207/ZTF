@@ -20,23 +20,13 @@ modelT = load_model(pathm+'weights-improvement-13313-22578.7060.hdf5')
 colorindex = data[:,0] - data[:,1]
 T = data[:,2]
 
-predictdatay = modelT.predict(colorindex)
+datax = data[0:data.shape[0], 0:2]
+predictdatay = modelT(datax)
 
 plt.figure(0)
-plt.plot(colorindex, T, '.')
+plt.plot(colorindex, T, '.', c='b', label='origin data')
+plt.plot(colorindex, predictdatay, '.', c='r', label='fitting by model')
+plt.legend()
 
-#f = c/(ci+b)
-def func(x, a, b):
-    return a/(x+b)
-
-
-popt, pcov = curve_fit(func, colorindex, T)
-print(popt)
-a = popt[0] 
-b = popt[1]
-
-yvals = func(colorindex,a,b) #拟合y值
-print('popt:', popt)
-print('系数a:', a)
-print('系数b:', b)
-plt.plot(colorindex, predictdatay, '.', c='r')
+plt.xlabel('clorindex',fontsize=18)
+plt.ylabel('temperature',fontsize=18)
