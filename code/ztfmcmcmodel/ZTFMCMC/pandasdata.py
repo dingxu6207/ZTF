@@ -49,6 +49,7 @@ npqdata[npqdata>1] = 1/npqdata[npqdata>1]
 cornordata = dfdata[['Period', 'colorindex', 'T1', 'incl', 'q', 't2t1', 'f', 'pr1', 'pr2', 'pbdic']]
 #cornordata['qinverse'] = npqdata
 #cornordata = dfdata[['Period', 'T1']]
+cornordata.to_csv('savedata.csv', index=0)
 
 npcor = np.array(cornordata.iloc[0:,0:])
 

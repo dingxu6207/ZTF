@@ -9,19 +9,19 @@ import numpy as np
 from tensorflow.keras.models import load_model
 import matplotlib.pylab as plt
 
-mpath = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\TESSMCMC\\model\\'
-dpath = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\TESSMCMC\\TESSSAMPLE\\'
-file = 'savedata01050Tl3.txt'
+mpath = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\KeplerMC\\model\\'
+dpath = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\KeplerMC\\'
+file = 'savedata01050l3.txt'
 
-model1 = load_model(mpath+'model1.hdf5')
+#model1 = load_model(mpath+'model1.hdf5')
 model10 = load_model(mpath+'model10.hdf5')
-l3model1 = load_model(mpath+'model1l3.hdf5')
+#l3model1 = load_model(mpath+'model1l3.hdf5')
 l3model10 = load_model(mpath+'model10l3.hdf5')
 
 
 data = np.loadtxt(dpath+file)
 np.random.shuffle(data)
-data = data[0:30000,:]
+data = data[0:100000,:]
 #np.savetxt('savedata01050TN.txt', data)
 
 hang,lie = data.shape
