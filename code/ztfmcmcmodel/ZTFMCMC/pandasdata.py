@@ -32,9 +32,9 @@ df = pd.concat(temp, axis=0)
 
 dfdata = df[df['stdflag'] < 1.05]
 dfdata = dfdata[dfdata['stdflag'] > 0.95]
-#dfdata = dfdata[dfdata['selectflag'] > 0.8]
-#dfdata = dfdata[dfdata['selectflag'] < 4]
-dfdata = dfdata[dfdata['stdchancha'] < 0.04]
+#dfdata = dfdata[dfdata['selectflag'] > 0.9]
+#dfdata = dfdata[dfdata['selectflag'] < 2]
+#dfdata = dfdata[dfdata['stdchancha'] < 0.04]
 #dfdata = dfdata[dfdata['l3'] < 0.1]
 
 dfdata['colorindex'] = dfdata['gmag'] - dfdata['rmag']
@@ -73,9 +73,9 @@ resiualdata = dfdata['stdchancha']
 npredatay = np.array(resiualdata)
 plt.hist(npredatay, bins=100)
 plt.xlabel('resiual',fontsize=18)
-plt.ylabel('frquentcy',fontsize=18)
-plt.title(r"$\mu$"+'='+str(np.round(np.mean(resiualdata),2)))
-
+plt.ylabel('frequency',fontsize=18)
+#plt.title(r"$\mu$"+'='+str(np.round(np.mean(resiualdata),2)))
+plt.axvline(x=0.04,ls=":",c="red")#添加水平直线
 
 plt.figure(4)
 selectdata = dfdata['selectflag']

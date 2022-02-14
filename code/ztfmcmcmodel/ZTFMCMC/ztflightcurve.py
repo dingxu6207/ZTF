@@ -230,9 +230,24 @@ phasemag = zerophasemagN(phases, resultmag)
 plt.figure(6)
 ax = plt.gca()
 ax.plot(phasemag[:,0], phasemag[:,1], '.')
-plt.xlabel('phase',fontsize=14)
-plt.ylabel('mag',fontsize=14)
+plt.xlabel('phase',fontsize=18)
+plt.ylabel('mag',fontsize=18)
 ax.yaxis.set_ticks_position('left') #将y轴的位置设置在右边
 ax.invert_yaxis() #y轴反向
      
 np.savetxt('ZTFtestdata.txt', phasemag)
+
+
+#################################################
+s = np.diff(phasemag[:,1],2).std()/np.sqrt(6)
+num = len(phasemag[:,1])
+sx1 = np.linspace(0,1,100)
+nplistphase = np.sort(phasemag[:,0])
+func1 = interpolate.UnivariateSpline(nplistphase, phasemag[:,1],s=s*s*num)#强制通过所有点
+sy1 = func1(sx1)
+
+xvals = np.linspace(0, 1, 100)
+yinterp = np.interp(xvals, phasemag[:,0], phasemag[:,1])
+
+#ax.plot(sx1, sy1, '.')
+ax.plot(xvals, yinterp, '.')
