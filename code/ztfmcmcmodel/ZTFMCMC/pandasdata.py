@@ -73,7 +73,7 @@ resiualdata = dfdata['stdchancha']
 npredatay = np.array(resiualdata)
 plt.hist(npredatay, bins=100)
 plt.xlabel('resiual',fontsize=18)
-plt.ylabel('frequency',fontsize=18)
+plt.ylabel('number',fontsize=18)
 #plt.title(r"$\mu$"+'='+str(np.round(np.mean(resiualdata),2)))
 plt.axvline(x=0.04,ls=":",c="red")#添加水平直线
 

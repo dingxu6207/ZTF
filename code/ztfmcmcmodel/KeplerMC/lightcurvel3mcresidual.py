@@ -27,7 +27,7 @@ model10l3mcmc = load_model(mpath+'model10l3mc.hdf5')
 
 data = np.loadtxt(dpath+file)
 np.random.shuffle(data)
-data = data[0:60000,:]
+data = data[0:30000,:]
 #np.savetxt('savedata01050TN.txt', data)
 
 hang,lie = data.shape
@@ -59,7 +59,7 @@ for i in range(0, hang):
 
 nptemp = np.array(temp)
 plt.figure(1)
-plt.hist(temp,bins=2000)
+plt.hist(temp,bins=500)
 plt.xlim(-0.002,0.004)
 plt.xlabel('residual',fontsize=18)
-plt.ylabel('frequency',fontsize=18)
+plt.ylabel('number',fontsize=18)

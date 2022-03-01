@@ -146,7 +146,7 @@ nburn=200 #保留最后多少点用于计算
 index = 0
 
 #初始范围[T/5850，incl/90,q,f,t2t1,l3]
-init_dist = [(0.78, 0.86), 
+init_dist = [(0.8, 0.8), 
              (0.77, 1.0), 
              (0.1, 10), 
              (0, 1), 
@@ -158,6 +158,7 @@ ndim = len(priors) #维度数
 def predict(allpara):
     
     arraymc = np.array(allpara)
+    #print(arraymc)
     
     if index == 0:
         mcinput = np.reshape(arraymc,(1,5))
@@ -235,11 +236,11 @@ else:
 
 ####################绘图
 if index == 1:
-    figure = corner.corner(emcee_trace.T,bins=100,labels=[r"$Tem$", r"$incl$", r"$q$", r"$f_0$", r"$t2t1$", r"$l3$"],
+    figure = corner.corner(emcee_trace.T[:,1:],bins=100,labels=[ r"$incl$", r"$q$", r"$f_0$", r"$t2t1$", r"$l3$"],
                        label_kwargs={"fontsize": 15},show_titles=True, title_kwargs={"fontsize": 15}, color ='blue')
 
 if index == 0:
-    figure = corner.corner(emcee_trace.T,bins=100,labels=[r"$Tem$", r"$incl$", r"$q$", r"$f_0$", r"$t2t1$"],
+    figure = corner.corner(emcee_trace.T[:,1:],bins=100,labels=[ r"$incl$", r"$q$", r"$f_0$", r"$t2t1$"],
                        label_kwargs={"fontsize": 15},show_titles=True, title_kwargs={"fontsize": 15}, color ='blue')
     
 plt.savefig('corner.png')

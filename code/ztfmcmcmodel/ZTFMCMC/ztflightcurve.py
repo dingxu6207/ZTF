@@ -237,7 +237,7 @@ ax.invert_yaxis() #y轴反向
      
 np.savetxt('ZTFtestdata.txt', phasemag)
 
-
+'''
 #################################################
 s = np.diff(phasemag[:,1],2).std()/np.sqrt(6)
 num = len(phasemag[:,1])
@@ -251,3 +251,4 @@ yinterp = np.interp(xvals, phasemag[:,0], phasemag[:,1])
 
 #ax.plot(sx1, sy1, '.')
 ax.plot(xvals, yinterp, '.')
+'''

@@ -26,7 +26,7 @@ model10l3mcmc = load_model(mpath+'model10l3mc.hdf5')
 
 data = np.loadtxt(dpath+file)
 np.random.shuffle(data)
-data = data[0:60000,:]
+data = data[0:30000,:]
 #np.savetxt('savedata01050TN.txt', data)
 
 hang,lie = data.shape
@@ -61,13 +61,13 @@ for i in range(0, hang):
 nptemp = np.array(temp)
 plt.figure(1)
 #plt.hist(temp,bins=2000)
-n, bins, patches = plt.hist(temp, bins=2000, density=1, alpha=0.5)
+n, bins, patches = plt.hist(temp, bins=2000)
 plt.xlim(0,0.004)
 plt.xlabel('residual',fontsize=18)
-plt.ylabel('frequency',fontsize=18)
-bf = norm.pdf(bins,np.mean(temp),np.std(temp))
-plt.plot(bins, bf, 'k--', linewidth=2.0)
-plt.title(r'$\mu=0.0002$, $\sigma=0.0004$')
+plt.ylabel('number',fontsize=18)
+#bf = norm.pdf(bins,np.mean(temp),np.std(temp))
+#plt.plot(bins, bf, 'k--', linewidth=2.0)
+#plt.title(r'$\mu=0.0002$, $\sigma=0.0004$')
 
 print(np.mean(nptemp))
 print(np.std(nptemp))

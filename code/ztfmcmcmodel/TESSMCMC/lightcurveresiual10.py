@@ -64,14 +64,15 @@ for i in range(0, hang):
 nptemp = np.array(temp)
 
 
-num_bins = 1000
+num_bins = 2000
 plt.figure(1)
-n, bins, patches = plt.hist(temp, num_bins, density=1, alpha=0.5)
+#n, bins, patches = plt.hist(temp, num_bins, density=0, alpha=0.5)
+n, bins, patches = plt.hist(temp, num_bins)
 plt.xlim(0,0.004)
 plt.xlabel('residual',fontsize=18)
-plt.ylabel('frequency',fontsize=18)
-bf = norm.pdf(bins,np.mean(temp),np.std(temp))
-plt.plot(bins, bf, 'k--', linewidth=2.0)
+plt.ylabel('number',fontsize=18)
+#bf = norm.pdf(bins,np.mean(temp),np.std(temp))
+#plt.plot(bins, bf, 'k--', linewidth=2.0)
 
 print(np.mean(nptemp))
 print(np.std(nptemp))

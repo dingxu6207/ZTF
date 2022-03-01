@@ -22,7 +22,7 @@ df.columns = ['index', 'name', 'RA', 'DEC', 'Period', 'Prob', 'T1', 'T1error',
               'l3', 'l3error', 'inputtemper', 'R2', 'pbdic', 'pr1', 'pr2', 'stdflag', 'stdchancha', 'selectflag', 'r_2']
 
 
-dfdata = df[df['r_2'] >0]
+dfdata = df[df['r_2'] >0.95]
 #dfdata = df[df['selectflag'] > 0.9]
 #dfdata = dfdata[dfdata['selectflag'] < 10]
 dfdata = dfdata[dfdata['stdflag'] < 1.02]
@@ -67,7 +67,7 @@ nprdatay = np.array(rdata)
 plt.figure(3)
 plt.hist(nprdatay, bins=100)
 plt.xlabel(r"$R^2$",fontsize=18)
-plt.ylabel('frequency',fontsize=18)
+plt.ylabel('number',fontsize=18)
 #plt.title(r"$\mu$"+'='+str(np.mean(nprdatay))+' '+r"$\sigma$"+'='+str(np.std(nprdatay)))
 
 R = np.loadtxt(patgfigure+'R.txt')
