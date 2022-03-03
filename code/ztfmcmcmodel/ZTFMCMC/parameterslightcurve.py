@@ -146,11 +146,12 @@ nburn=200 #保留最后多少点用于计算
 index = 0
 
 #初始范围[T/5850，incl/90,q,f,t2t1,l3]
-init_dist = [(0.8, 0.8), 
-             (0.77, 1.0), 
-             (0.1, 10), 
+init_dist = [(1+0.0001, 1+0.0002), 
+             (0.3, 0.75), 
+             (0, 4), 
              (0, 1), 
-             (0.90, 1)]
+             (0.80, 1.2)
+             ]
 
 priors=init_dist.copy()
 ndim = len(priors) #维度数
@@ -222,8 +223,16 @@ t1=time.time()
 emcee_trace  = run(priors, nwalkers, niter,nburn) #run mcmc
 print('time=',time.time()-t1) #MCMC运行时间
 
+#if index == 0:
+#    mu = [np.median(emcee_trace[0,:]), np.median(emcee_trace[1,:]), np.median(emcee_trace[2,:]), 
+#      np.median(emcee_trace[3,:]), np.median(emcee_trace[4,:])]
+#if index == 1:
+#    mu = [np.median(emcee_trace[0,:]), np.median(emcee_trace[1,:]), np.median(emcee_trace[2,:]), 
+#      np.median(emcee_trace[3,:]), np.median(emcee_trace[4,:]), np.median(emcee_trace[5,:])]
+#
+#mu = np.array(mu)  
 
-mu=(emcee_trace.mean(axis=1)) #参数均值
+mu=(emcee_trace.mean(axis=1)) #参数均值  
 sigma=(emcee_trace.std(axis=1)) #参数误差
 print('mu=',mu)
 print('sigma=',sigma)
@@ -250,7 +259,7 @@ pre=predict(mu.reshape(1,-1))
 plt.figure()
 ax = plt.gca()
 ax.plot(x,noisy,'.') #原始数据
-ax.plot(phrase+phrase[10], datay, '.', c = 'b')
+ax.plot(phrase-phrase[0], datay, '.', c = 'b')
 #ax.plot(x,pre.flatten(),'-r') #理论数据
 #ax.plot(times, resultflux, '*', c='g') #理论数据
 ax.plot(x, pre,'-r') #理论数据

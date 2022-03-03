@@ -206,8 +206,8 @@ def stddata(npjdmag, P):
     stdndata = np.std(yuandata)
     return stdndata/datanoise
 
-RAp = 0.01619
-DECp = 55.63331
+RAp = 290.10406494140625
+DECp = 37.82181167602539
 lcq = lightcurve.LCQuery.from_position(RAp, DECp, 1)   
 dfdata = lcq.data
 dfdata = dfdata[dfdata["filtercode"]=='zr']

@@ -18,36 +18,41 @@ lightdata = np.loadtxt(path+'savedata01050T.txt')
 
 plt.figure(0)
 T = lightdata[:,100]
-sns.kdeplot(T*5850,shade=True)
-plt.title('T',fontsize=18)
-plt.xlabel('T',fontsize=18)
-plt.ylabel('frequency',fontsize=18)
+#sns.kdeplot(T*5850,shade=True)
+plt.hist(T*5850, bins=1000)
+plt.title('T1',fontsize=18)
+plt.xlabel('T1',fontsize=18)
+plt.ylabel('number',fontsize=18)
 
 
 plt.figure(1)
 incldata = lightdata[:,102]
-sns.kdeplot(incldata,shade=True)
+#sns.kdeplot(incldata,shade=True)
+plt.hist(incldata, bins=1000)
 plt.title('incl',fontsize=18)
 plt.xlabel('incl',fontsize=18)
-plt.ylabel('frequency',fontsize=18)
+plt.ylabel('number',fontsize=18)
 
 plt.figure(2)
 qdata = lightdata[:,103]
-sns.kdeplot(qdata,shade=True)
+#sns.kdeplot(qdata,shade=True)
+plt.hist(qdata, bins=1000)
 plt.title('q',fontsize=18)
 plt.xlabel('q',fontsize=18)
-plt.ylabel('frequency',fontsize=18)
+plt.ylabel('number',fontsize=18)
 
 plt.figure(3)
 rdata = lightdata[:,104]
-sns.kdeplot(rdata,shade=True)
+#sns.kdeplot(rdata,shade=True)
+plt.hist(rdata, bins=1000)
 plt.title('f',fontsize=18)
 plt.xlabel('f',fontsize=18)
-plt.ylabel('frequency',fontsize=18)
+plt.ylabel('number',fontsize=18)
 
 plt.figure(4)
 tdata = lightdata[:,105]
-sns.kdeplot(tdata,shade=True)
+#sns.kdeplot(tdata,shade=True)
+plt.hist(tdata, bins=1000)
 plt.title('T2/T1',fontsize=18)
 plt.xlabel('T2/T1',fontsize=18)
-plt.ylabel('frequency',fontsize=18)
+plt.ylabel('number',fontsize=18)

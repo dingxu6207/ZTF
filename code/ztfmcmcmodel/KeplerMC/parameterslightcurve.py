@@ -130,7 +130,7 @@ l3model10mc = load_model(mpath+'model10l3mc.hdf5')
 #data = np.loadtxt(path+file)
 
 path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-fileone = 'KIC 11618883.txt'
+fileone = 'KIC 3127873.txt'
 data = np.loadtxt(path+fileone)
 
 phrase = data[:,0]
@@ -144,15 +144,15 @@ sigma = np.diff(noisy,2).std()/np.sqrt(6) #估计观测噪声值
 nwalkers = 30
 niter = 500
 nburn=200 #保留最后多少点用于计算
-index = 1
+index = 0
 
 #初始范围[T/5850，incl/90,q,f,t2t1,l3]
-init_dist = [(0.70, 0.78), 
-             (0.84, 0.99), 
-             (0.20, 0.5), 
-             (0.65, 1), 
-             (0.90, 1.2),
-             (0.43, 1)]
+init_dist = [(1.06+0.0001, 1.06+0.0002), 
+             (0.84, 0.96), 
+             (0.04, 0.2), 
+             (0, 1), 
+             (0.8, 1.2)
+             ]
 
 priors=init_dist.copy()
 ndim = len(priors) #维度数
@@ -237,11 +237,11 @@ else:
 
 ####################绘图
 if index == 1:
-    figure = corner.corner(emcee_trace.T,bins=100,labels=[r"$Tem$", r"$incl$", r"$q$", r"$f_0$", r"$t2t1$", r"$l3$"],
+    figure = corner.corner(emcee_trace.T[:,1:],bins=100,labels=[r"$incl$", r"$q$", r"$f_0$", r"$t2t1$", r"$l3$"],
                        label_kwargs={"fontsize": 15},show_titles=True, title_kwargs={"fontsize": 15}, color ='blue')
 
 if index == 0:
-    figure = corner.corner(emcee_trace.T,bins=100,labels=[r"$Tem$", r"$incl$", r"$q$", r"$f_0$", r"$t2t1$"],
+    figure = corner.corner(emcee_trace.T[:,1:],bins=100,labels=[r"$incl$", r"$q$", r"$f_0$", r"$t2t1$"],
                        label_kwargs={"fontsize": 15},show_titles=True, title_kwargs={"fontsize": 15}, color ='blue')
     
 plt.savefig('corner.png')

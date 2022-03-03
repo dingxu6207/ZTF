@@ -130,7 +130,7 @@ l3model10mc = load_model(path+'model10l3mc.hdf5')
 #data = np.loadtxt(path+file)
 
 path = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\TESSMCMC\\EWDATA\\'
-file = 'TIC 1981434196.txt'
+file = 'TIC 123038007.txt'
 data = np.loadtxt(path+file)
 
 #fileone = 'ZTFtestdata.txt'
@@ -147,15 +147,15 @@ sigma = np.diff(noisy,2).std()/np.sqrt(6) #估计观测噪声值
 nwalkers = 20
 niter = 500
 nburn=200 #保留最后多少点用于计算
-index = 1
+index = 0
 
 #初始范围[T，incl,q,f,t2t1,l3] T/5850 incl/90 
-init_dist = [(1.01, 1.05), 
-             (0.7, 0.8),
-             (1, 4), 
-             (0.7, 0.9),
-             (0.89, 0.96),
-             (0.1,0.3)]
+init_dist = [(1.21+0.0001, 1.21+0.0002), 
+             (0.9, 0.99),
+             (0, 0.4), 
+             (0.2, 0.9),
+             (0.89, 1.2)
+            ]
 
 priors=init_dist.copy()
 ndim = len(priors) #维度数
@@ -200,8 +200,6 @@ def lnprob(z): #计算后仰概率
     if not np.isfinite(lnp):
             return -np.inf
          
-    print('it is ok')
-
     output = predict(z)
 
     lnp = -0.5*np.sum(np.log(2 * np.pi * sigma ** 2)+(output-noisy)**2/(sigma**2)) #计算似然函数
@@ -243,11 +241,11 @@ else:
 
 ####################绘图
 if index == 1:
-    figure = corner.corner(emcee_trace.T,bins=100,labels=[r"$Tem$", r"$incl$", r"$q$", r"$f_0$", r"$t2t1$", r"$l3$"],
+    figure = corner.corner(emcee_trace.T[:,1:],bins=100,labels=[r"$incl$", r"$q$", r"$f_0$", r"$t2t1$", r"$l3$"],
                        label_kwargs={"fontsize": 15},show_titles=True, title_kwargs={"fontsize": 15}, color ='blue')
 
 if index == 0:
-    figure = corner.corner(emcee_trace.T,bins=100,labels=[r"$Tem$", r"$incl$", r"$q$", r"$f_0$", r"$t2t1$"],
+    figure = corner.corner(emcee_trace.T[:,1:],bins=100,labels=[r"$incl$", r"$q$", r"$f_0$", r"$t2t1$"],
                        label_kwargs={"fontsize": 15},show_titles=True, title_kwargs={"fontsize": 15}, color ='blue')
     
 plt.savefig('corner.png')
