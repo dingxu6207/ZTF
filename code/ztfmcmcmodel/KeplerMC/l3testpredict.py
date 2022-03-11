@@ -20,6 +20,8 @@ l3model10 = load_model(mpath+'model10l3.hdf5')
 
 
 data = np.loadtxt(dpath+file)
+print(len(data))
+
 np.random.shuffle(data)
 data = data[0:100000,:]
 #np.savetxt('savedata01050TN.txt', data)

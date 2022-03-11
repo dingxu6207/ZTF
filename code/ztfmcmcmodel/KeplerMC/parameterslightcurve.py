@@ -20,6 +20,28 @@ import emcee
 import corner
 import phoebe
 
+
+def quantile(x, q, weights=None): 
+ 
+    x = np.atleast_1d(x)
+    q = np.atleast_1d(q)
+
+    if np.any(q < 0.0) or np.any(q > 1.0):
+        raise ValueError("Quantiles must be between 0 and 1")
+
+    if weights is None:
+        return np.percentile(x, list(100.0 * q))
+    else:
+        weights = np.atleast_1d(weights)
+        if len(x) != len(weights):
+            raise ValueError("Dimension mismatch: len(weights) != len(x)")
+        idx = np.argsort(x)
+        sw = weights[idx]
+        cdf = np.cumsum(sw)[:-1]
+        cdf /= cdf[-1]
+        cdf = np.append(0, cdf)
+        return np.interp(q, cdf, x[idx]).tolist()
+    
 ############################################################################
 ############################################################################
 def plotphoebenol3T(padata, times):
@@ -130,7 +152,7 @@ l3model10mc = load_model(mpath+'model10l3mc.hdf5')
 #data = np.loadtxt(path+file)
 
 path = 'E:\\shunbianyuan\\data\\kepler\\KIC_name\\'
-fileone = 'KIC 3127873.txt'
+fileone = 'KIC 11618883.txt'
 data = np.loadtxt(path+fileone)
 
 phrase = data[:,0]
@@ -144,14 +166,15 @@ sigma = np.diff(noisy,2).std()/np.sqrt(6) #估计观测噪声值
 nwalkers = 30
 niter = 500
 nburn=200 #保留最后多少点用于计算
-index = 0
+index = 1
 
 #初始范围[T/5850，incl/90,q,f,t2t1,l3]
-init_dist = [(1.06+0.0001, 1.06+0.0002), 
-             (0.84, 0.96), 
-             (0.04, 0.2), 
-             (0, 1), 
-             (0.8, 1.2)
+init_dist = [(0.72+0.0001, 0.72+0.0002), 
+             (0.9, 0.96), 
+             (0.18, 0.22), 
+             (0.70, 0.76), 
+             (1.0, 1.03),
+             (0.5,0.55)
              ]
 
 priors=init_dist.copy()
@@ -238,11 +261,11 @@ else:
 ####################绘图
 if index == 1:
     figure = corner.corner(emcee_trace.T[:,1:],bins=100,labels=[r"$incl$", r"$q$", r"$f_0$", r"$t2t1$", r"$l3$"],
-                       label_kwargs={"fontsize": 15},show_titles=True, title_kwargs={"fontsize": 15}, color ='blue')
+                       label_kwargs={"fontsize": 15},title_fmt='.3f',show_titles=True, title_kwargs={"fontsize": 15}, color ='blue')
 
 if index == 0:
     figure = corner.corner(emcee_trace.T[:,1:],bins=100,labels=[r"$incl$", r"$q$", r"$f_0$", r"$t2t1$"],
-                       label_kwargs={"fontsize": 15},show_titles=True, title_kwargs={"fontsize": 15}, color ='blue')
+                       label_kwargs={"fontsize": 15},title_fmt='.3f',show_titles=True, title_kwargs={"fontsize": 15}, color ='blue')
     
 plt.savefig('corner.png')
 #------------------------------------------------------------

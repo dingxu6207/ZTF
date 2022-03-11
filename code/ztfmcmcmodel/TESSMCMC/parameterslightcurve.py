@@ -130,7 +130,7 @@ l3model10mc = load_model(path+'model10l3mc.hdf5')
 #data = np.loadtxt(path+file)
 
 path = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\TESSMCMC\\EWDATA\\'
-file = 'TIC 123038007.txt'
+file = 'TIC 1981434196.txt'
 data = np.loadtxt(path+file)
 
 #fileone = 'ZTFtestdata.txt'
@@ -147,14 +147,15 @@ sigma = np.diff(noisy,2).std()/np.sqrt(6) #估计观测噪声值
 nwalkers = 20
 niter = 500
 nburn=200 #保留最后多少点用于计算
-index = 0
+index = 1
 
 #初始范围[T，incl,q,f,t2t1,l3] T/5850 incl/90 
-init_dist = [(1.21+0.0001, 1.21+0.0002), 
-             (0.9, 0.99),
-             (0, 0.4), 
-             (0.2, 0.9),
-             (0.89, 1.2)
+init_dist = [(1.02+0.0001, 1.02+0.0002), 
+             (0.74, 0.8),
+             (1.75, 2.6), 
+             (0.6, 0.80),
+             (0.91, 0.93),
+             (0.16,0.28)
             ]
 
 priors=init_dist.copy()
@@ -242,11 +243,13 @@ else:
 ####################绘图
 if index == 1:
     figure = corner.corner(emcee_trace.T[:,1:],bins=100,labels=[r"$incl$", r"$q$", r"$f_0$", r"$t2t1$", r"$l3$"],
-                       label_kwargs={"fontsize": 15},show_titles=True, title_kwargs={"fontsize": 15}, color ='blue')
+                       label_kwargs={"fontsize": 15}, show_titles=True, title_fmt='.3f', 
+                       title_kwargs={"fontsize": 15}, color ='blue')
 
 if index == 0:
     figure = corner.corner(emcee_trace.T[:,1:],bins=100,labels=[r"$incl$", r"$q$", r"$f_0$", r"$t2t1$"],
-                       label_kwargs={"fontsize": 15},show_titles=True, title_kwargs={"fontsize": 15}, color ='blue')
+                       label_kwargs={"fontsize": 15},show_titles=True, title_fmt='.3f',
+                       title_kwargs={"fontsize": 15}, color ='blue')
     
 plt.savefig('corner.png')
 #------------------------------------------------------------
