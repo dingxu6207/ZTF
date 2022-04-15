@@ -8,6 +8,18 @@ Created on Tue Jan  4 10:56:41 2022
 import numpy as np
 from tensorflow.keras.models import load_model
 import matplotlib.pylab as plt
+from scipy import interpolate
+
+def interone(datax, datay):
+    interdata = np.copy(datay)
+    interdata = interdata -np.mean(interdata)
+    sx1 = np.linspace(0,1,100)
+    s = np.diff(interdata,2).std()/np.sqrt(6)
+    num = len(datay)
+    datax = np.sort(datax)
+    func1 = interpolate.UnivariateSpline(datax, interdata,s=s*s*num)#强制通过所有点
+    sy1 = func1(sx1)  
+    return sx1,sy1,s
 
 mpath = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\KeplerMC\\model\\'
 dpath = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\KeplerMC\\'
@@ -27,12 +39,13 @@ data = data[0:5000,:]
 #np.savetxt('savedata01050TN.txt', data)
 
 hang,lie = data.shape
-
+noise = np.random.normal(0,0.001,100)
+x = np.linspace(0,1,100)
 datax = data[:,0:101]
 for i in range(0, hang):
-    datax[i,0:100] = -2.5*np.log10(datax[i,0:100])
+    datax[i,0:100] = -2.5*np.log10(datax[i,0:100])+noise
     datax[i,0:100] = datax[i,0:100] - np.mean(datax[i,0:100])
-
+   
 datay = data[:,102:106]
 
 predict1 = model10.predict(datax)

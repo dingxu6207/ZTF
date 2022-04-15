@@ -10,38 +10,7 @@ from tensorflow.keras.models import load_model
 import matplotlib.pylab as plt
 
 def quantile(x, q, weights=None): 
-    """
-    Compute sample quantiles with support for weighted samples.
 
-    Note
-    ----
-    When ``weights`` is ``None``, this method simply calls numpy's percentile
-    function with the values of ``q`` multiplied by 100.
-
-    Parameters
-    ----------
-    x : array_like[nsamples,]
-       The samples.
-
-    q : array_like[nquantiles,]
-       The list of quantiles to compute. These should all be in the range
-       ``[0, 1]``.
-
-    weights : Optional[array_like[nsamples,]]
-        An optional weight corresponding to each sample. These
-
-    Returns
-    -------
-    quantiles : array_like[nquantiles,]
-        The sample quantiles computed at ``q``.
-
-    Raises
-    ------
-    ValueError
-        For invalid quantiles; ``q`` not in ``[0, 1]`` or dimension mismatch
-        between ``x`` and ``weights``.
-
-    """
     x = np.atleast_1d(x)
     q = np.atleast_1d(q)
 
@@ -69,10 +38,11 @@ model10mcmc = load_model(mpath+'model10mcnew.hdf5')
 model10l3mcmc = load_model(mpath+'model10l3mc.hdf5')
 
 
-data = np.loadtxt(dpath+file)
-np.random.shuffle(data)
-data = data[0:30000,:]
-#np.savetxt('savedata01050TN.txt', data)
+#data = np.loadtxt(dpath+file)
+#np.random.shuffle(data)
+#data = data[0:15000,:]
+#np.savetxt('testdata01050.txt', data)
+data = np.loadtxt('testdata01050.txt')
 
 hang,lie = data.shape
 
@@ -88,10 +58,14 @@ predict1 = model10mcmc(datay)
 
 plt.figure(0)
 ax = plt.gca()
-ax.plot(datax[0,0:100])
-ax.plot(predict1[0],'.')
+ax.plot(datax[12,0:100])
+ax.plot(predict1[12],'.')
 ax.yaxis.set_ticks_position('left') #将y轴的位置设置在右边
 ax.invert_yaxis() #y轴反向
+plt.xlabel('phase', fontsize=18)
+plt.ylabel('mag', fontsize=18)
+print(data[12,100:106])
+print(np.std(data[12,0:100]-np.array(predict1[12])))
 
 canchajuzhen = datax[:,0:100] - predict1
 
@@ -108,8 +82,14 @@ print(q_16, q_50, q_84)
 
 print(np.mean(nptemp))
 plt.figure(1)
-plt.hist(temp,bins=2000)
+plt.hist(temp,bins=1000)
 plt.xlim(-0.002,0.004)
 plt.xlabel('mag',fontsize=18)
 plt.ylabel('number',fontsize=18)
 plt.savefig('resiualmagnol3.png')
+
+plt.axvline(x = q_16, ls = "-", c = "green", linewidth=1)
+plt.axvline(x = q_50, ls = "-", c = "green", linewidth=1)
+plt.axvline(x = q_84, ls = "-", c = "green", linewidth=1)
+
+plt.title(r'$\sigma=0.00044^{+0.000709}_{-0.000289}$')

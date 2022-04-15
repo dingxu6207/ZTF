@@ -10,12 +10,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 
-filename = 'testcsv1.csv'
+filename = 'mcmcerror20.csv'
 df = pd.read_csv(filename)
 
 dfdata = df[['INCL','INCLERROR','Q','QERROR','F','FERROR','T2T1','T2T1ERROR','realincl', 'realq', 'realf', 'realt2t1','maxminmag']]
 
-dfdata.to_csv('testcsv2.csv',encoding='gbk')
+#dfdata.to_csv('testcsv2.csv',encoding='gbk')
 
 ##################################################
 INCL = dfdata.iloc[:,0]
@@ -26,7 +26,7 @@ resiualincl = INCL-realINCL
 print(np.mean(resiualincl), np.std(resiualincl))
 
 plt.figure(0)
-plt.hist(resiualincl, bins=2000, density = 0)
+plt.hist(resiualincl, bins=500, density = 0)
 #plt.hist(sigmaincl, bins=1000, label='sigma incl', density = 0)
 plt.xlim(-2,2)
 plt.xlabel(r'$\Delta$'+'incl',fontsize=18)

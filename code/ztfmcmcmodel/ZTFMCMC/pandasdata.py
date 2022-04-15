@@ -12,7 +12,8 @@ import corner
 import matplotlib.pylab as plt
 
 temp = []
-path = 'I:\\backup\\ZTFCODE\\code3\\parameterfile\\'
+#path = 'I:\\backup\\ZTFCODE\\code3\\parameterfile\\'
+path = 'I:\\ZTFCODE\\code3\\parameterfile\\'
 
 for root, dirs, files in os.walk(path):
    for file in files:
@@ -38,8 +39,8 @@ dfdata = dfdata[dfdata['stdflag'] > 0.95]
 #dfdata = dfdata[dfdata['l3'] < 0.1]
 
 dfdata['colorindex'] = dfdata['gmag'] - dfdata['rmag']
-dfdata = dfdata[dfdata['Period'] < 1.0]
-dfdata = dfdata[dfdata['colorindex'] > -2]
+#dfdata = dfdata[dfdata['Period'] < 1.0]
+#dfdata = dfdata[dfdata['colorindex'] > -2]
 
 qdata = dfdata['q']
 npqdatay = np.array(qdata)
@@ -50,6 +51,10 @@ cornordata = dfdata[['Period', 'colorindex', 'T1', 'incl', 'q', 't2t1', 'f', 'pr
 #cornordata['qinverse'] = npqdata
 #cornordata = dfdata[['Period', 'T1']]
 cornordata.to_csv('savedata.csv', index=0)
+
+starsdata = dfdata[['name', 'RA', 'DEC', 'Period', 'T1', 't2t1', 't2t1error', 'incl', 'inclerror', 'q', 
+                    'qerror', 'f', 'ferror', 'l3', 'l3error', 'pbdic', 'pr1', 'pr2', 'stdchancha']]
+starsdata.to_csv('starsdata.csv', index=0)
 
 npcor = np.array(cornordata.iloc[0:,0:])
 
@@ -75,7 +80,7 @@ plt.hist(npredatay, bins=100)
 plt.xlabel('resiual',fontsize=18)
 plt.ylabel('number',fontsize=18)
 #plt.title(r"$\mu$"+'='+str(np.round(np.mean(resiualdata),2)))
-plt.axvline(x=0.04,ls=":",c="red")#添加水平直线
+plt.axvline(x=0.02,ls=":",c="red")#添加水平直线
 
 plt.figure(4)
 selectdata = dfdata['selectflag']

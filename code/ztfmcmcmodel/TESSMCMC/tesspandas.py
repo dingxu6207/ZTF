@@ -22,15 +22,15 @@ df.columns = ['index', 'name', 'RA', 'DEC', 'Period', 'Prob', 'T1', 'T1error',
               'l3', 'l3error', 'inputtemper', 'R2', 'pbdic', 'pr1', 'pr2', 'stdflag', 'stdchancha', 'selectflag', 'r_2']
 
 
-dfdata = df[df['r_2'] >0.95]
+dfdata = df[df['r_2'] > 0.95]
 #dfdata = df[df['selectflag'] > 0.9]
 #dfdata = dfdata[dfdata['selectflag'] < 10]
-dfdata = dfdata[dfdata['stdflag'] < 1.02]
-dfdata = dfdata[dfdata['stdflag'] > 0.98]
+dfdata = dfdata[dfdata['stdflag'] < 1.05]
+dfdata = dfdata[dfdata['stdflag'] > 0.95]
 #dfdata = dfdata[dfdata['l3'] < 0.1]
 
 
-dfdata = dfdata[dfdata['Period'] <2]
+#dfdata = dfdata[dfdata['Period'] <2]
 
 
 qdata = dfdata['q']
@@ -41,7 +41,8 @@ npqdata[npqdata>1] = 1/npqdata[npqdata>1]
 cornordata = dfdata[['Period', 'T1', 'incl', 'q', 't2t1', 'f', 'pr1', 'pr2', 'pbdic']]
 #cornordata['qinverse'] = npqdata
 #cornordata = dfdata[['Period', 'T1']]
-savedata = dfdata[['name','RA','DEC','Period', 'T1','T1error','incl','inclerror','q','qerror','t2t1','t2t1error', 'f','ferror','l3','l3error','pr1', 'pr2', 'pbdic', 'r_2']]
+#savedata = dfdata[['name','RA','DEC','Period', 'T1','T1error','incl','inclerror','q','qerror','t2t1','t2t1error', 'f','ferror','l3','l3error','pr1', 'pr2', 'pbdic', 'r_2']]
+savedata = dfdata[['name','RA','DEC','Period', 'T1','incl','inclerror','q','qerror','t2t1','t2t1error', 'f','ferror','l3','l3error','pr1', 'pr2', 'pbdic', 'r_2']]
 savedata.to_csv('savedata.csv', index=0)
 
 npcor = np.array(cornordata.iloc[0:,0:])

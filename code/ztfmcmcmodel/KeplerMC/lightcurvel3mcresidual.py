@@ -11,38 +11,7 @@ import matplotlib.pylab as plt
 
 
 def quantile(x, q, weights=None): 
-    """
-    Compute sample quantiles with support for weighted samples.
 
-    Note
-    ----
-    When ``weights`` is ``None``, this method simply calls numpy's percentile
-    function with the values of ``q`` multiplied by 100.
-
-    Parameters
-    ----------
-    x : array_like[nsamples,]
-       The samples.
-
-    q : array_like[nquantiles,]
-       The list of quantiles to compute. These should all be in the range
-       ``[0, 1]``.
-
-    weights : Optional[array_like[nsamples,]]
-        An optional weight corresponding to each sample. These
-
-    Returns
-    -------
-    quantiles : array_like[nquantiles,]
-        The sample quantiles computed at ``q``.
-
-    Raises
-    ------
-    ValueError
-        For invalid quantiles; ``q`` not in ``[0, 1]`` or dimension mismatch
-        between ``x`` and ``weights``.
-
-    """
     x = np.atleast_1d(x)
     q = np.atleast_1d(q)
 
@@ -62,13 +31,6 @@ def quantile(x, q, weights=None):
         cdf = np.append(0, cdf)
         return np.interp(q, cdf, x[idx]).tolist()
     
-#path = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\ZTFMCMC\\data\\'
-#file = 'savedata01050Tl3.txt'
-
-#model1 = load_model(path+'model1.hdf5')
-#model10 = load_model(path+'model10.hdf5')
-#l3model1 = load_model(path+'model1l3.hdf5')
-#l3model10 = load_model(path+'model10l3.hdf5')
 
 mpath = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\KeplerMC\\model\\'
 dpath = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\KeplerMC\\'
@@ -78,11 +40,11 @@ model10mcmc = load_model(mpath+'model10mc.hdf5')
 model10l3mcmc = load_model(mpath+'model10l3mc.hdf5')
 
 
-data = np.loadtxt(dpath+file)
-np.random.shuffle(data)
-data = data[0:30000,:]
-#np.savetxt('savedata01050TN.txt', data)
-
+#data = np.loadtxt(dpath+file)
+#np.random.shuffle(data)
+#data = data[0:15000,:]
+#np.savetxt('testdata01050l3.txt', data)
+data = np.loadtxt('testdata01050l3.txt')
 hang,lie = data.shape
 
 datax = data[:,0:101]
@@ -101,6 +63,10 @@ ax.plot(datax[0,0:100])
 ax.plot(predict1[0],'.')
 ax.yaxis.set_ticks_position('left') #将y轴的位置设置在右边
 ax.invert_yaxis() #y轴反向
+plt.xlabel('phase', fontsize=18)
+plt.ylabel('mag', fontsize=18)
+print(data[0,100:108])
+print(np.std(data[0,0:100]-np.array(predict1[0])))
 
 canchajuzhen = datax[:,0:100] - predict1
 
@@ -113,10 +79,14 @@ for i in range(0, hang):
 nptemp = np.array(temp)
 plt.figure(1)
 plt.hist(temp,bins=500)
-plt.xlim(-0.002,0.004)
+plt.xlim(-0.001,0.002)
 plt.xlabel('mag',fontsize=18)
 plt.ylabel('number',fontsize=18)
 plt.savefig('resiualmagl3.png')
 
 q_16, q_50, q_84 = quantile(nptemp, [0.16, 0.5, 0.84])  
 print(q_16, q_50, q_84)
+plt.axvline(x = q_16, ls = "-", c = "green", linewidth=1)
+plt.axvline(x = q_50, ls = "-", c = "green", linewidth=1)
+plt.axvline(x = q_84, ls = "-", c = "green", linewidth=1)
+plt.title(r'$\sigma=0.000199^{+0.000339}_{-0.000130}$')
