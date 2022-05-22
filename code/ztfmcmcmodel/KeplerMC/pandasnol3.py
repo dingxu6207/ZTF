@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 
-filename = 'mcmcerror20.csv'
+filename = 'mcmcerror50.csv'
 df = pd.read_csv(filename)
 
 dfdata = df[['INCL','INCLERROR','Q','QERROR','F','FERROR','T2T1','T2T1ERROR','realincl', 'realq', 'realf', 'realt2t1','maxminmag']]
@@ -23,14 +23,15 @@ realINCL = dfdata.iloc[:,8]
 sigmaincl = dfdata.iloc[:,1]
 resiualincl = INCL-realINCL
 
-print(np.mean(resiualincl), np.std(resiualincl))
+print(np.round(np.mean(resiualincl),3), np.round(np.std(resiualincl),3))
 
 plt.figure(0)
 plt.hist(resiualincl, bins=500, density = 0)
-#plt.hist(sigmaincl, bins=1000, label='sigma incl', density = 0)
+#plt.hist(sigmaincl, bins=500, label='sigma incl', density = 0)
 plt.xlim(-2,2)
 plt.xlabel(r'$\Delta$'+'incl',fontsize=18)
 plt.ylabel('number',fontsize=18)
+plt.title(r'$\Delta$'+'incl='+str(np.round(np.mean(resiualincl),3))+r'$\pm$'+str(np.round(np.std(resiualincl),3)),fontsize=18)
 #plt.legend()
 
 
@@ -48,6 +49,7 @@ plt.hist(resiualQ, bins=1000, density = 0)
 plt.xlim(-1,1)
 plt.xlabel(r'$\Delta$'+'q',fontsize=18)
 plt.ylabel('number',fontsize=18)
+plt.title(r'$\Delta$'+'q='+str(np.round(np.mean(resiualQ),3))+r'$\pm$'+str(np.round(np.std(resiualQ),3)),fontsize=18)
 #plt.legend()
 #####################################################
 
@@ -64,6 +66,7 @@ plt.hist(resiualF, bins=1000, density = 1)
 plt.xlim(-0.2,0.2)
 plt.xlabel(r'$\Delta$'+'f',fontsize=18)
 plt.ylabel('nunber',fontsize=18)
+plt.title(r'$\Delta$'+'f='+str(np.round(np.mean(resiualF),3))+r'$\pm$'+str(np.round(np.std(resiualF),3)),fontsize=18)
 #plt.legend()
 #####################################################
 T2T1 = dfdata.iloc[:,6]
@@ -77,8 +80,9 @@ plt.figure(3)
 plt.hist(resiualT2T1, bins=2000, density = 1)
 #plt.hist(sigmaT2T1, bins=1000, label='sigma F\T2T1', density = 1)
 plt.xlim(-0.02,0.02)
-plt.xlabel(r'$\Delta$'+'T2T1',fontsize=18)
+plt.xlabel(r'$\Delta$'+'T2/T1',fontsize=18)
 plt.ylabel('number',fontsize=18)
+plt.title(r'$\Delta$'+'T2/T1='+str(np.round(np.mean(resiualT2T1),3))+r'$\pm$'+str(np.round(np.std(resiualT2T1),3)),fontsize=18)
 #plt.legend()
 
 
@@ -90,3 +94,19 @@ plt.ylabel('number',fontsize=18)
 #plt.figure(4)
 #plt.plot(np.array(dataselect.iloc[:,0]), np.array(errorselec), '.')
 
+temperror = []
+hang,lie = dfdata.shape
+QandRealQ = dfdata[['Q', 'realq']]
+npQandrealQ = np.array(QandRealQ)
+for i in range(0, hang):
+    if npQandrealQ[i,0] > 1:
+        error = 1/npQandrealQ[i,0] - 1/npQandrealQ[i,1]
+        temperror.append(error)
+    else:
+        temperror.append(npQandrealQ[i,0]-npQandrealQ[i,1])
+        
+plt.figure(4)
+plt.hist(temperror, bins=2000, density = 1)
+plt.xlim(-0.05, 0.05)
+plt.xlabel(r'$\Delta$'+'q',fontsize=18)
+plt.ylabel('number',fontsize=18)

@@ -259,15 +259,18 @@ else:
     
 
 ####################绘图
+
 if index == 1:
-    figure = corner.corner(emcee_trace.T[:,1:],bins=100,labels=[r"$incl$", r"$q$", r"$f_0$", r"$t2t1$", r"$l3$"],
+    figure = corner.corner(emcee_trace.T[:,1:],bins=100,labels=[r"$incl$", r"$q$", r"$f$", r"$t2t1$", r"$l3$"],
                        label_kwargs={"fontsize": 15},title_fmt='.3f',show_titles=True, title_kwargs={"fontsize": 15}, color ='blue')
 
 if index == 0:
-    figure = corner.corner(emcee_trace.T[:,1:],bins=100,labels=[r"$incl$", r"$q$", r"$f_0$", r"$t2t1$"],
+    figure = corner.corner(emcee_trace.T[:,1:],bins=100,labels=[r"$incl$", r"$q$", r"$f$", r"$t2t1$"],
                        label_kwargs={"fontsize": 15},title_fmt='.3f',show_titles=True, title_kwargs={"fontsize": 15}, color ='blue')
     
 plt.savefig('corner.png')
+
+
 #------------------------------------------------------------
 #用输出值预测理论曲线
 pre=predict(mu.reshape(1,-1))

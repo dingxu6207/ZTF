@@ -21,8 +21,10 @@ df.columns = ['index', 'name', 'RA', 'DEC', 'Period', 'Prob', 'T1', 'T1error',
               'incl', 'inclerror', 'q', 'qerror', 'f','ferror', 't2t1', 't2t1error',
               'l3', 'l3error', 'inputtemper', 'R2', 'pbdic', 'pr1', 'pr2', 'stdflag', 'stdchancha', 'selectflag', 'r_2']
 
+#dfdata1 = df[df['r_2'] > 0.9]
+#print(len(dfdata1))
 
-dfdata = df[df['r_2'] > 0.95]
+dfdata = df[df['r_2'] > 0]
 #dfdata = df[df['selectflag'] > 0.9]
 #dfdata = dfdata[dfdata['selectflag'] < 10]
 dfdata = dfdata[dfdata['stdflag'] < 1.05]

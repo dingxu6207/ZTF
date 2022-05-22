@@ -58,7 +58,7 @@ tdatal3 = lightdatal3[:,105]
 sns.kdeplot(tdata, shade=False, label='nol3')
 sns.kdeplot(tdatal3, shade=False, label='l3', color ='r')
 plt.xlabel('T2/T1',fontsize=18)
-plt.ylabel('number',fontsize=18)
+plt.ylabel('density',fontsize=18)
 plt.legend(loc='upper right')
 
 plt.figure(5)

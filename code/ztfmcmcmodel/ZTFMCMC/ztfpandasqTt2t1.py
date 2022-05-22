@@ -19,7 +19,7 @@ savedata = df[['Period','colorindex','T1','incl', 'q','t2t1','f','pr1','pr2','pb
 savedata['T2'] = savedata['T1']*savedata['t2t1']
 npcor = np.array(savedata.iloc[0:,0:])
 data = npcor[:,[0,1,2,10,3,4,6,7,8,9]] #Period, colorindex, T1, T2, incl, q, f,  pr1, pr2, pbdic
-
+data = data[data[:,0]<1]
 
 hang,lie = data.shape
 
