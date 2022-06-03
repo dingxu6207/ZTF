@@ -76,7 +76,7 @@ def pholddata(per, times, fluxes):
     mags = -2.5*np.log10(fluxes)
     mags = mags-np.mean(mags)
     
-    lendata =  int((per/26)*1*len(times))
+    lendata =  int((per/26)*1.1*len(times))
      
     time = times[0:lendata]
     mag = mags[0:lendata]
@@ -97,8 +97,8 @@ def stddata(timedata, fluxdata, P):
     return stddata/datanoise
 
 
-path = 'J:\\EADATA\\' 
-file = 'tess2021146024351-s0039-0000000303142114-0210-s_lc.fits'
+path = 'J:\\EA\\' 
+file = 'tess2018206045859-s0001-0000000278706358-0120-s_lc.fits'
 
 tbjd, fluxes, RA, DEC = readfits(path+file)
 coord = SkyCoord(ra = RA, dec = DEC, unit=(u.degree, u.degree), frame='icrs')

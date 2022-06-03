@@ -24,11 +24,11 @@ df.columns = ['index', 'name', 'RA', 'DEC', 'Period', 'Prob', 'T1', 'T1error',
 #dfdata1 = df[df['r_2'] > 0.9]
 #print(len(dfdata1))
 
-dfdata = df[df['r_2'] > 0]
+dfdata = df[df['r_2'] > 0.95]
 #dfdata = df[df['selectflag'] > 0.9]
 #dfdata = dfdata[dfdata['selectflag'] < 10]
-dfdata = dfdata[dfdata['stdflag'] < 1.05]
-dfdata = dfdata[dfdata['stdflag'] > 0.95]
+#dfdata = dfdata[dfdata['stdflag'] < 1.05]
+#dfdata = dfdata[dfdata['stdflag'] > 0.95]
 #dfdata = dfdata[dfdata['l3'] < 0.1]
 
 

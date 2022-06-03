@@ -77,10 +77,12 @@ model10mcmc = load_model(mpath+'model10mc.hdf5')
 model10l3mcmc = load_model(mpath+'model10l3mc.hdf5')
 
 
-data = np.loadtxt(dpath+file)
-np.random.shuffle(data)
-data = data[0:30000,:]
+#data = np.loadtxt(dpath+file)
+#np.random.shuffle(data)
+#data = data[0:30000,:]
 #np.savetxt('savedata01050TN.txt', data)
+#np.savetxt('testdata01050l3.txt', data)
+data = np.loadtxt('testdata01050l3.txt')
 
 hang,lie = data.shape
 
@@ -102,6 +104,8 @@ ax.yaxis.set_ticks_position('left') #将y轴的位置设置在右边
 ax.invert_yaxis() #y轴反向
 plt.xlabel('phase',fontsize=18)
 plt.ylabel('mag',fontsize=18)
+print(data[0, 100:])
+print(np.std(data[0, 0:100]-np.array(predict1[0])))
 
 canchajuzhen = datax[:,0:100] - predict1
 
@@ -115,7 +119,7 @@ nptemp = np.array(temp)
 plt.figure(1)
 #plt.hist(temp,bins=2000)
 n, bins, patches = plt.hist(temp, bins=2000)
-plt.xlim(0,0.004)
+plt.xlim(-0.001,0.002)
 plt.xlabel('mag',fontsize=18)
 plt.ylabel('number',fontsize=18)
 plt.savefig('resiualmagl3.png')
@@ -123,8 +127,11 @@ plt.savefig('resiualmagl3.png')
 #plt.plot(bins, bf, 'k--', linewidth=2.0)
 #plt.title(r'$\mu=0.0002$, $\sigma=0.0004$')
 
-print(np.mean(nptemp))
-print(np.std(nptemp))
 
 q_16, q_50, q_84 = quantile(nptemp, [0.16, 0.5, 0.84])  
 print(q_16, q_50, q_84)
+plt.axvline(x = q_16, ls = "-", c = "green", linewidth=1)
+plt.axvline(x = q_50, ls = "-", c = "green", linewidth=1)
+plt.axvline(x = q_84, ls = "-", c = "green", linewidth=1)
+
+plt.title(r'$\sigma=0.00019^{+0.00033}_{-0.00012}$')

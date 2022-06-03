@@ -18,7 +18,9 @@ import pandas as pd
 import emcee
 import corner
 import phoebe
+from multiprocessing import Pool
 
+#os.environ["OMP_NUM_THREADS"] = "1"
 
 def plotphoebenol3T(padata, times):
     #logger = phoebe.logger('warning')
@@ -66,7 +68,7 @@ def plotphoebenol3T(padata, times):
         
         fluxmodel = b['value@fluxes@lc01@model']
         resultflux = -2.5*np.log10(fluxmodel)
-        resultflux = resultflux - np.mean(resultflux)+padata[7]
+        resultflux = resultflux - np.mean(resultflux)
         return times,resultflux, pbdic, pr1, pr2
         #return times,resultflux, 0, 0, 0
     except:
@@ -108,7 +110,21 @@ def predict(allpara):
         mcinput = np.reshape(arraymc,(1,6))
         #lightdata = l3model10mc(mcinput)
          
-    return lightdata[0]+arraymcall[7]
+    return lightdata[0]+arraymcall[8]
+
+def getdata(allpara):
+    arraymc = np.array(allpara)
+    if index == 0:
+        offset = int(arraymc[7])
+        dataym = np.hstack((datay[offset:], datay[:offset]))
+        
+    if index == 1:
+        offset = int(arraymc[7])
+        dataym = np.hstack((datay[offset:], datay[:offset]))
+    
+    noisy = np.interp(x,phrase,dataym) #y轴
+    
+    return noisy
 
 
 def rpars(init_dist):#在ndim 维度上，在初始的范围里面均匀撒ndim个点
@@ -135,6 +151,7 @@ def lnprob(z): #计算后仰概率
 
 
     output = predict(z)
+    noisy = getdata(z)
 
     lnp = -0.5*np.sum(np.log(2 * np.pi * sigma ** 2)+(output-noisy)**2/(sigma**2)) #计算似然函数
       
@@ -146,14 +163,9 @@ def run(init_dist, nwalkers, niter,nburn):
     ndim = len(init_dist)
     # Generate initial guesses for all parameters for all chains
     p0 = [rpars(init_dist) for i in range(nwalkers)] #均匀撒ndim*nwalkers点
- #   print(p0)
-
-    # Generate the emcee sampler. Here the inputs provided include the 
-    # lnprob function. With this setup, the first parameter
-    # in the lnprob function is the output from the sampler (the paramter 
-    # positions).
-    sampler = emcee.EnsembleSampler(nwalkers,ndim,lnprob) #建立MCMC模型
-    pos, prob, state = sampler.run_mcmc(p0, niter) # 撒点
+    
+    sampler = emcee.EnsembleSampler(nwalkers, ndim, lnprob) #建立MCMC模型
+    pos, prob, state = sampler.run_mcmc(p0, niter, progress = True) # 撒点
     emcee_trace = sampler.chain[:, -nburn:, :].reshape(-1, ndim).T #保留最后nburn 个点做统计
 
     return emcee_trace 
@@ -162,7 +174,7 @@ def run(init_dist, nwalkers, niter,nburn):
 
 
 mpath = ''
-model10mc = load_model(mpath+'model.hdf5')
+model10mc = load_model(mpath+'model201.hdf5')
 
 path = ''
 fileone = 'phasemag.txt'
@@ -170,25 +182,29 @@ data = np.loadtxt(path+fileone)
 
 phrase = data[:,0]
 datay = data[:,1]-np.mean(data[:,1])
-x = np.linspace(0, 1, 100) #x轴
+datay = np.hstack((datay[0:], datay[:0]))
+
+
+x = np.linspace(0, 1, 201) #x轴
 noisy = np.interp(x,phrase,datay) #y轴
 sigma = np.diff(datay,2).std()/np.sqrt(6) #估计观测噪声值
 
 ###########MCMC参数
-nwalkers = 30
-niter = 500
-nburn=200 #保留最后多少点用于计算
+nwalkers = 60
+niter = 1000
+nburn = 200 #保留最后多少点用于计算
 index = 0
 
 #初始范围[T/8000，T2/T1, INCL/90, Q, R1,R1R2,ECC]
-init_dist = [(0.73, 0.73+0.0001), #T/8000   0.5-1
-             (0.95, 1), #T2/T1    0.5-1
+init_dist = [( 0.6751265869137499-0.0001,  0.6751265869137499+0.0001), #T/8000   0.5-1
+             (0.5, 1), #T2/T1    0.5-1
              (0.7, 1.0), #INCL/90 0.7-1
-             (0.0, 1.0), #q
-             (0.02, 0.487),#R1  0.02-0.487
-             (0., 1.5),#R1R2   0-1.5
-             (0,0.1),#ECC   0-0.1
-             (-0.05,0.05)
+             (0.0, 1), #q
+             (0.1, 0.487),#R1  0.02-0.487
+             (0., 1),#R1R2   0-1.5
+             (0, 0.01),#ECC   0-0.1
+             (-20, 20),
+             (-0.001, 0.001)
              ]
 
 priors = init_dist.copy()
@@ -214,10 +230,17 @@ sigma_2 = np.array(sigma_2)
 
 
 if index == 0:
-    figure = corner.corner(emcee_trace.T[:,:],bins=100,labels=[r"$T1$",  r"$T2T1$", r"$incl$",  r"$q$",  r"$r1$", r"$r1r2$", r"$ecc$" ,r"$offset$"],
+    figure = corner.corner(emcee_trace.T[:,:],bins=100,labels=[r"$T1$",  r"$T2T1$", r"$incl$",  r"$q$",  r"$r1$", r"$r1r2$", r"$ecc$" ,r"$offset1$", r"$offset2$"],
                        label_kwargs={"fontsize": 15},title_fmt='.4f',show_titles=True, title_kwargs={"fontsize": 15}, color ='blue')
 
-times,resultflux, pbdic, pr1, pr2 = plotphoebenol3T(mu, x)
+#times,resultflux, pbdic, pr1, pr2 = plotphoebenol3T(mu, x)
+if index == 0:
+    offset = int(mu[7])
+else :
+    offset = int(mu[8])
+
+datay = np.hstack((datay[offset:], datay[:offset])) 
+
 
 pre=predict(mu)
 plt.figure()
@@ -225,7 +248,7 @@ ax = plt.gca()
 #ax.plot(x,noisy,'.') #原始数据
 ax.plot(phrase, datay, '.', c = 'b')
 #ax.plot(x,pre.flatten(),'-r') #理论数据
-ax.plot(times, resultflux, marker='x', c='g', markersize = 8) #理论数据
+#ax.plot(times, resultflux, marker='x', c='g', markersize = 8) #理论数据
 ax.plot(x, pre,'-r') #理论数据
 ax.yaxis.set_ticks_position('left') #将y轴的位置设置在右边
 ax.invert_yaxis() #y轴反向

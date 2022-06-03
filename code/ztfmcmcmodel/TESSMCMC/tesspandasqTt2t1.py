@@ -15,10 +15,10 @@ from scipy.optimize import curve_fit
 df = pd.read_csv('savedata.csv')
 patgfigure = 'E:\\shunbianyuan\\phometry\\pipelinecode\\ZTF\\code\\ztfmcmcmodel\\TESSMCMC\\paperfigure\\'
 
-savedata = df[['name','RA','DEC','Period', 'T1','T1error','incl','inclerror','q','qerror','t2t1','t2t1error', 'f','ferror','l3','l3error','pr1', 'pr2', 'pbdic', 'r_2']]
+savedata = df[['name','RA','DEC','Period', 'T1','incl','inclerror','q','qerror','t2t1','t2t1error', 'f','ferror','l3','l3error','pr1', 'pr2', 'pbdic', 'r_2']]
 savedata['T2'] = savedata['T1']*savedata['t2t1']
 npcor = np.array(savedata.iloc[0:,1:])
-data = npcor[:,[2,3,19,5,7,11,15,16,17]] #Period, T1, T2, incl, q, f,  pr1, pr2, pbdic
+data = npcor[:,[2,3,18,4,6,10,14,15,16]] #Period, T1, T2, incl, q, f,  pr1, pr2, pbdic
 
 hang,lie = data.shape
 
@@ -38,6 +38,8 @@ for i in range (0,hang):
         data[i,6] = data[i,7]
         data[i,7] = tempr
  
+np.savetxt('data01.txt', data)    
+    
 def func(x,  c):
     return x**c
 

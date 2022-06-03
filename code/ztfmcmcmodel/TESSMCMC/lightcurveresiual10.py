@@ -77,10 +77,12 @@ model10mcmc = load_model(mpath+'model10mc.hdf5')
 model10l3mcmc = load_model(mpath+'model10l3mc.hdf5')
 
 
-data = np.loadtxt(dpath+file)
-np.random.shuffle(data)
-data = data[0:60000,:]
+#data = np.loadtxt(dpath+file)
+#np.random.shuffle(data)
+#data = data[0:60000,:]
 #np.savetxt('savedata01050TN.txt', data)
+#np.savetxt('testdata01050.txt', data)
+data = np.loadtxt('testdata01050.txt')
 
 hang,lie = data.shape
 
@@ -104,6 +106,8 @@ ax.yaxis.set_ticks_position('left') #将y轴的位置设置在右边
 ax.invert_yaxis() #y轴反向
 plt.xlabel('phase',fontsize=18)
 plt.ylabel('mag',fontsize=18)
+print(data[0, 100:106])
+print(np.std(data[0, 0:100]-np.array(predict1[0])))
 
 canchajuzhen = datax[:,0:100] - predict1
 
@@ -122,13 +126,16 @@ num_bins = 2000
 plt.figure(1)
 #n, bins, patches = plt.hist(temp, num_bins, density=0, alpha=0.5)
 n, bins, patches = plt.hist(temp, num_bins)
-plt.xlim(0,0.004)
+plt.xlim(-0.001,0.002)
 plt.xlabel('mag',fontsize=18)
 plt.ylabel('number',fontsize=18)
 plt.savefig('resiualmagnol3.png')
 
-print(np.mean(nptemp))
-print(np.std(nptemp))
 
 q_16, q_50, q_84 = quantile(nptemp, [0.16, 0.5, 0.84])  
 print(q_16, q_50, q_84)
+plt.axvline(x = q_16, ls = "-", c = "green", linewidth=1)
+plt.axvline(x = q_50, ls = "-", c = "green", linewidth=1)
+plt.axvline(x = q_84, ls = "-", c = "green", linewidth=1)
+
+plt.title(r'$\sigma=0.00032^{+0.00052}_{-0.00021}$')

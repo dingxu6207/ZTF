@@ -25,7 +25,7 @@ item = 1
 k = 0
 
 
-start_url = 'https://asas-sn.osu.edu/variables?ra=&dec=&radius=0.5&vmag_min=&vmag_max=&amplitude_min=&amplitude_max=&period_min=&period_max=&lksl_min=&lksl_max=&class_prob_min=&class_prob_max=&parallax_over_err_min=&parallax_over_err_max=&name=&variable_type[]=EW&references[]=I&references[]=II&references[]=III&references[]=IV&references[]=V&references[]=IX&sort_by=lksl_statistic&sort_order=asc&show_non_periodic=true&show_without_class=true&asassn_discov_only=false&page=906'
+start_url = 'https://asas-sn.osu.edu/variables?ra=&dec=&radius=0.5&vmag_min=&vmag_max=&amplitude_min=&amplitude_max=&period_min=&period_max=&lksl_min=&lksl_max=&class_prob_min=&class_prob_max=&parallax_over_err_min=&parallax_over_err_max=&name=&variable_type[]=EA&references[]=I&references[]=II&references[]=III&references[]=IV&references[]=V&references[]=IX&sort_by=raj2000&sort_order=asc&show_non_periodic=true&show_without_class=true&asassn_discov_only=false&'
 
 
 startres = requests.get(start_url)
@@ -55,7 +55,7 @@ while item == 1:
                 #print(a[14].get('href'))
                 final_url = 'https://asas-sn.osu.edu'+str(a[14].get('href'))
                 #print(final_url)
-                filepath = 'c:\\Users\\dingxu\\Desktop\\dingxu\\'+str(filename)+'.xlsx'
+                filepath = 'J:\\ASASEA\\'+str(filename)+'.csv'
                 urllib.request.urlretrieve(final_url,filename = filepath)
                 k = k+1
                 print(filepath)
