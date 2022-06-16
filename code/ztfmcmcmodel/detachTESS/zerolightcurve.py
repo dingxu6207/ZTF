@@ -41,7 +41,7 @@ def readfits(fits_file):
         
         return time, flux, RA, DEC
 
-def zerophse(phases, resultmag):
+def zerophse1(phases, resultmag):
     listmag = resultmag.tolist()
     listmag.extend(listmag)
     listphrase = phases.tolist()
@@ -62,6 +62,43 @@ def zerophse(phases, resultmag):
     
     return phasemag
 
+def zerophasemag(phases, resultmag):
+    
+    listmag = resultmag.tolist()
+    listmag.extend(listmag)  
+    listphrase = phases.tolist()
+    listphrase.extend(listphrase+np.max(1)) 
+    #############以上进行拼接#####################
+    
+    nplistmag = np.array(listmag)
+    nplistphase = np.array(listphrase)
+    try:
+        s = np.diff(nplistmag,2).std()/np.sqrt(6)
+        num = len(nplistmag)
+        sx1 = np.linspace(0,1,10000)
+        nplistphase = np.sort(nplistphase)
+        func1 = interpolate.UnivariateSpline(nplistphase, nplistmag,s=s*s*num)#强制通过所有点
+        sy1 = func1(sx1)
+        indexmag = np.argmax(sy1)
+        nplistphase = nplistphase-sx1[indexmag]
+        #nplistphrase = np.array(listphrase)
+    except:
+        try:
+            sortmag = np.sort(nplistmag)
+            maxindex = np.median(sortmag[-9:])
+            indexmag = listmag.index(maxindex)
+            nplistphase = nplistphase-nplistphase[indexmag]
+        except:
+            return [0,0]
+#################以上求最大值对应的位置#########################
+    phasemag = np.vstack((nplistphase, nplistmag)) #纵向合并矩阵
+    phasemag = phasemag.T
+    
+    phasemag = phasemag[phasemag[:,0]>=0]
+    phasemag = phasemag[phasemag[:,0]<=1]
+    
+    return phasemag
+
 def computeperiod(JDtime, targetflux):
    
     ls = LombScargle(JDtime, targetflux, normalization='model')
@@ -76,7 +113,7 @@ def pholddata(per, times, fluxes):
     mags = -2.5*np.log10(fluxes)
     mags = mags-np.mean(mags)
     
-    lendata =  int((per/26)*1.1*len(times))
+    lendata =  int((per/26)*1.6*len(times))
      
     time = times[0:lendata]
     mag = mags[0:lendata]
@@ -97,8 +134,8 @@ def stddata(timedata, fluxdata, P):
     return stddata/datanoise
 
 
-path = 'J:\\EA\\' 
-file = 'tess2018206045859-s0001-0000000278706358-0120-s_lc.fits'
+path = 'X:\\DingXu\\EADATA\\' 
+file = 'tess2018206045859-s0001-0000000441422220-0120-s_lc.fits'
 
 tbjd, fluxes, RA, DEC = readfits(path+file)
 coord = SkyCoord(ra = RA, dec = DEC, unit=(u.degree, u.degree), frame='icrs')
@@ -115,7 +152,7 @@ stdodata1 = stddata(tbjd, fluxes, comper)
 stdodata2 = stddata(tbjd, fluxes, comper*2)
 
 phases, resultmag = pholddata(comper*2, tbjd, fluxes)
-phasemag = zerophse(phases, resultmag)
+phasemag = zerophasemag(phases, resultmag)
 
 
 np.savetxt('phasemag.txt', phasemag)

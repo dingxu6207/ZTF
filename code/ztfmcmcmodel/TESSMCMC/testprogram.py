@@ -10,6 +10,7 @@ import time
 from tensorflow.keras.models import load_model
 import emcee
 import corner
+import os
 
 def calculater(ydata, caldata):
     res_ydata  = np.array(ydata) - np.array(caldata)
@@ -154,6 +155,20 @@ def run(init_dist, nwalkers, niter,nburn):
     emcee_trace = sampler.chain[:, -nburn:, :].reshape(-1, ndim).T #保留最后nburn 个点做统计
 
     return emcee_trace 
+
+
+#from multiprocessing import Pool
+#os.environ["OMP_NUM_THREADS"] = "1"
+#def run(init_dist, nwalkers, niter,nburn):
+#    ndim = len(init_dist)
+#    p0 = [rpars(init_dist) for i in range(nwalkers)] #均匀撒ndim*nwalkers点
+#    with Pool() as pool:
+#        sampler = emcee.EnsembleSampler(nwalkers, ndim, lnprob, pool=pool)
+#        sampler.run_mcmc(p0, niter, progress=True)
+#        pos, prob, state = sampler.run_mcmc(p0, niter, progress=True) # 撒点
+#        emcee_trace = sampler.chain[:, -nburn:, :].reshape(-1, ndim).T #保留最后nb
+#    return emcee_trace
+
 
 t1 = time.time()
 emcee_trace  = run(priors, nwalkers, niter,nburn) #run mcmc

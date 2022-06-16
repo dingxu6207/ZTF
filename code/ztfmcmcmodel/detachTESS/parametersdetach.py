@@ -174,7 +174,7 @@ def run(init_dist, nwalkers, niter,nburn):
 
 
 mpath = ''
-model10mc = load_model(mpath+'model201.hdf5')
+model10mc = load_model(mpath+'model202.hdf5')
 
 path = ''
 fileone = 'phasemag.txt'
@@ -196,15 +196,15 @@ nburn = 200 #保留最后多少点用于计算
 index = 0
 
 #初始范围[T/8000，T2/T1, INCL/90, Q, R1,R1R2,ECC]
-init_dist = [( 0.6751265869137499-0.0001,  0.6751265869137499+0.0001), #T/8000   0.5-1
+init_dist = [( 0.7679937744137499-0.0001, 0.7679937744137499+0.0001), #T/8000   0.5-1
              (0.5, 1), #T2/T1    0.5-1
-             (0.7, 1.0), #INCL/90 0.7-1
-             (0.0, 1), #q
-             (0.1, 0.487),#R1  0.02-0.487
-             (0., 1),#R1R2   0-1.5
+             (0.964, 1.0), #INCL/90 0.7-1
+             (0.2, 0.6), #q
+             (0.0, 0.5),#R1  0.02-0.487
+             (0.0, 0.55),#R1R2   0-1.5
              (0, 0.01),#ECC   0-0.1
              (-20, 20),
-             (-0.001, 0.001)
+             (-0.1, 0.1)
              ]
 
 priors = init_dist.copy()
@@ -233,7 +233,9 @@ if index == 0:
     figure = corner.corner(emcee_trace.T[:,:],bins=100,labels=[r"$T1$",  r"$T2T1$", r"$incl$",  r"$q$",  r"$r1$", r"$r1r2$", r"$ecc$" ,r"$offset1$", r"$offset2$"],
                        label_kwargs={"fontsize": 15},title_fmt='.4f',show_titles=True, title_kwargs={"fontsize": 15}, color ='blue')
 
-#times,resultflux, pbdic, pr1, pr2 = plotphoebenol3T(mu, x)
+plt.savefig('corner.png')
+
+times,resultflux, pbdic, pr1, pr2 = plotphoebenol3T(mu, x)
 if index == 0:
     offset = int(mu[7])
 else :
@@ -248,7 +250,11 @@ ax = plt.gca()
 #ax.plot(x,noisy,'.') #原始数据
 ax.plot(phrase, datay, '.', c = 'b')
 #ax.plot(x,pre.flatten(),'-r') #理论数据
-#ax.plot(times, resultflux, marker='x', c='g', markersize = 8) #理论数据
+if index == 0:
+    ax.plot(times, resultflux+mu[8], marker='x', c='g', markersize = 8) #理论数据
+else:
+    ax.plot(times, resultflux+mu[9], marker='x', c='g', markersize = 8) #理论数据
+    
 ax.plot(x, pre,'-r') #理论数据
 ax.yaxis.set_ticks_position('left') #将y轴的位置设置在右边
 ax.invert_yaxis() #y轴反向
